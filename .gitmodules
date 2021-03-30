@@ -1,0 +1,6 @@
+[submodule "repo/page-alto-resources"]
+	path = repo/page-alto-resources
+	url = https://github.com/maxnth/page-alto-ressources
+[submodule "repo/assets"]
+	path = repo/assets
+	url = https://github.com/OCR-D/assets

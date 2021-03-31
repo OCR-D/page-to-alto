@@ -130,8 +130,8 @@ class OcrdPageAltoConverter():
             set_alto_id_from_page_id(line_alto, line_page)
             set_alto_xywh_from_coords(line_alto, line_page)
             set_alto_shape_from_coords(line_alto, line_page)
-            if not line_page.get_Word():
-                raise ValueError("pc:TextLine '%s' has no pc:Word")
+            if not line_page.get_Word() and line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode():
+                raise ValueError("pc:TextLine '%s' has no pc:Word" % line_page.id)
             for word_page in line_page.get_Word():
                 word_alto = ET.SubElement(line_alto, 'String')
                 set_alto_id_from_page_id(word_alto, word_page)

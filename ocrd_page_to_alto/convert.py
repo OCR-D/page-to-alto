@@ -121,7 +121,7 @@ class OcrdPageAltoConverter():
         alto_measurementunit = ET.SubElement(self.alto_description, 'MeasurementUnit')
         alto_measurementunit.text = 'pixel'
         alto_sourceimageinformation = ET.SubElement(self.alto_description, 'sourceImageInformation')
-        alto_filename = ET.SubElement(alto_sourceimageinformation, 'filename')
+        alto_filename = ET.SubElement(alto_sourceimageinformation, 'fileName')
         alto_filename.text = self.page_page.imageFilename
 
     def _convert_textlines(self, reg_alto, reg_page):

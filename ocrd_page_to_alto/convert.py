@@ -119,7 +119,7 @@ class OcrdPageAltoConverter():
 
     def convert_metadata(self):
         alto_measurementunit = ET.SubElement(self.alto_description, 'MeasurementUnit')
-        alto_measurementunit.text = 'pixels'
+        alto_measurementunit.text = 'pixel'
         alto_sourceimageinformation = ET.SubElement(self.alto_description, 'sourceImageInformation')
         alto_filename = ET.SubElement(alto_sourceimageinformation, 'filename')
         alto_filename.text = self.page_page.imageFilename

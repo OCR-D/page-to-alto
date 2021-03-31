@@ -8,9 +8,9 @@
 * [ ] unmappable regions
 * [x] handle Border
 * [ ] TextStyle
-* [-] table regions
+* [x] table regions
 * [ ] recursive regions
 * [ ] rotation
-* [-] reading order
-* [ ] input PAGE-XML not having words
+* [x] reading order
+* [x] input PAGE-XML not having words
 * [ ] multiple pc:TextEquivs

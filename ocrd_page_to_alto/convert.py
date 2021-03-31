@@ -133,6 +133,7 @@ class OcrdPageAltoConverter():
             is_empty_line = not(line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode())
             if not line_page.get_Word() and not is_empty_line:
                 raise ValueError("pc:TextLine '%s' has no pc:Word" % line_page.id)
+            # XXX ALTO does not allow TextLine without at least one String
             if is_empty_line:
                 word_alto_empty = ET.SubElement(line_alto, 'String')
                 word_alto_empty.set('CONTENT', '')

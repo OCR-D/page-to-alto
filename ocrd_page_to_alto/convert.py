@@ -130,8 +130,12 @@ class OcrdPageAltoConverter():
             set_alto_id_from_page_id(line_alto, line_page)
             set_alto_xywh_from_coords(line_alto, line_page)
             set_alto_shape_from_coords(line_alto, line_page)
-            if not line_page.get_Word() and line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode():
+            is_empty_line = not(line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode())
+            if not line_page.get_Word() and not is_empty_line:
                 raise ValueError("pc:TextLine '%s' has no pc:Word" % line_page.id)
+            if is_empty_line:
+                word_alto_empty = ET.SubElement(line_alto, 'String')
+                word_alto_empty.set('CONTENT', '')
             for word_page in line_page.get_Word():
                 word_alto = ET.SubElement(line_alto, 'String')
                 set_alto_id_from_page_id(word_alto, word_page)
@@ -146,6 +150,9 @@ class OcrdPageAltoConverter():
             if not reg_alto_type:
                 raise ValueError("Cannot handle PAGE-XML %sRegion" % reg_page_type)
             reg_alto = ET.SubElement(self.alto_printspace, reg_alto_type)
+            set_alto_id_from_page_id(reg_alto, reg_page)
+            set_alto_xywh_from_coords(reg_alto, reg_page)
+            set_alto_shape_from_coords(reg_alto, reg_page)
             if reg_page_type == 'Text':
                 self._convert_textlines(reg_alto, reg_page)
             elif reg_page_type == 'Table':
@@ -156,7 +163,4 @@ class OcrdPageAltoConverter():
                 pass # nothing more to do
             else:
                 raise ValueError('Unhandled region type %s' % reg_page_type)
-            set_alto_id_from_page_id(reg_alto, reg_page)
-            set_alto_xywh_from_coords(reg_alto, reg_page)
-            set_alto_shape_from_coords(reg_alto, reg_page)
 

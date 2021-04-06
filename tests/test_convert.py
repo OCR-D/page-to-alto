@@ -35,5 +35,9 @@ def test_convert3():
     print(c)
     # assert 0
 
+def test_convert_no_words():
+    with raises(ValueError) as e:
+        OcrdPageAltoConverter(page_filename='tests/assets/SBB0000F29300010000/data/OCR-D-GT-PAGE/FILE_0001_FULLTEXT.xml')
+
 if __name__ == "__main__":
     main([__file__])

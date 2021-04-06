@@ -1,6 +1,6 @@
 # pylint: disable=no-member, c-extension-no-member
 from lxml import etree as ET
-from ocrd_models.ocrd_page import (parse, parseString)
+from ocrd_models.ocrd_page import parse, parseString, to_xml
 from ocrd_models.constants import NAMESPACES as NAMESPACES_
 from ocrd_utils import getLogger, xywh_from_points
 
@@ -36,7 +36,11 @@ REGION_PAGE_TO_ALTO = {
 
 class OcrdPageAltoConverter():
 
-    def __init__(self, *, page_filename=None, page_etree=None, pcgts=None, logger=None):
+    def __init__(self, *, check_words=True, page_filename=None, page_etree=None, pcgts=None, logger=None):
+        """
+        Keyword Args:
+            check_words (boolean): Whether to check if PAGE-XML contains any words before conversion and fail if not
+        """
         if not (page_filename or page_etree or pcgts):
             raise ValueError("Must pass either pcgts, page_etree or page_filename to constructor")
         self.logger = logger if logger else getLogger('page-to-alto')
@@ -47,6 +51,10 @@ class OcrdPageAltoConverter():
         else:
             self.page_pcgts = parse(page_filename)
         self.page_page = self.page_pcgts.get_Page()
+        if check_words:
+            xml_ = ET.fromstring(to_xml(self.page_pcgts).encode('utf-8'))
+            if xml_.find('.//page:Word', NAMESPACES) is None:
+                raise ValueError("The PAGE-XML to transform contains no Words, hence nothing to convert.")
         # TODO self.check_for_words()
         self.alto_alto, self.alto_description, self.alto_styles, self.alto_tags, self.alto_page = self.create_alto()
         self.alto_printspace = self.convert_border()

@@ -36,14 +36,16 @@ REGION_PAGE_TO_ALTO = {
 
 class OcrdPageAltoConverter():
 
-    def __init__(self, *, check_words=True, check_border=True, page_filename=None, page_etree=None, pcgts=None, logger=None):
+    def __init__(self, *, check_words=True, check_border=True, skip_empty_lines=False, page_filename=None, page_etree=None, pcgts=None, logger=None):
         """
         Keyword Args:
             check_words (boolean): Whether to check if PAGE-XML contains any words before conversion and fail if not
             check_border (boolean): Whether to abort if neither Border nor PrintSpace is defined
+            skip_empty_lines (boolean): Whether to omit empty lines completely (True) or create a placeholder empty String in ALTO (False)
         """
         if not (page_filename or page_etree or pcgts):
             raise ValueError("Must pass either pcgts, page_etree or page_filename to constructor")
+        self.skip_empty_lines = skip_empty_lines
         self.logger = logger if logger else getLogger('page-to-alto')
         if pcgts:
             self.page_pcgts = pcgts
@@ -161,17 +163,17 @@ class OcrdPageAltoConverter():
 
     def _convert_textlines(self, reg_alto, reg_page):
         for line_page in reg_page.get_TextLine():
-            line_alto = ET.SubElement(reg_alto, 'TextLine')
-            set_alto_id_from_page_id(line_alto, line_page)
-            set_alto_xywh_from_coords(line_alto, line_page)
-            set_alto_shape_from_coords(line_alto, line_page)
             is_empty_line = not(line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode())
-            if not line_page.get_Word() and not is_empty_line:
-                raise ValueError("pc:TextLine '%s' has no pc:Word" % line_page.id)
-            # XXX ALTO does not allow TextLine without at least one String
+            if is_empty_line and self.skip_empty_lines:
+                return
+            line_alto = ET.SubElement(reg_alto, 'TextLine')
             if is_empty_line:
                 word_alto_empty = ET.SubElement(line_alto, 'String')
                 word_alto_empty.set('CONTENT', '')
+            set_alto_id_from_page_id(line_alto, line_page)
+            set_alto_xywh_from_coords(line_alto, line_page)
+            set_alto_shape_from_coords(line_alto, line_page)
+            # XXX ALTO does not allow TextLine without at least one String
             for word_page in line_page.get_Word():
                 word_alto = ET.SubElement(line_alto, 'String')
                 set_alto_id_from_page_id(word_alto, word_page)

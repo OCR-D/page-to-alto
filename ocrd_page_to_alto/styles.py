@@ -76,6 +76,11 @@ class TextStylesManager():
         # TODO letterSpaced
         return self.get_style_id(**kwargs)
 
+    def set_alto_styleref_from_textstyle(self, reg_alto, reg_page):
+        textstyle = reg_page.get_TextStyle() if hasattr(reg_page, 'get_TextStyle') else None
+        if textstyle:
+            reg_alto.set('STYLEREFS', self.from_textstyle(textstyle))
+
     def to_xml(self, alto_styles):
         for style_id, style in self.styles.items():
             el_style = ET.SubElement(alto_styles, self.output_element)

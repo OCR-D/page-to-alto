@@ -160,7 +160,7 @@ class OcrdPageAltoConverter():
             set_alto_id_from_page_id(line_alto, line_page)
             set_alto_xywh_from_coords(line_alto, line_page)
             set_alto_shape_from_coords(line_alto, line_page)
-            self.set_alto_styleref_from_textstyle(line_alto, line_page)
+            self.textstyle_mgr.set_alto_styleref_from_textstyle(line_alto, line_page)
             # XXX ALTO does not allow TextLine without at least one String
             if is_empty_line:
                 word_alto_empty = ET.SubElement(line_alto, 'String')
@@ -182,7 +182,7 @@ class OcrdPageAltoConverter():
             set_alto_id_from_page_id(reg_alto, reg_page)
             set_alto_xywh_from_coords(reg_alto, reg_page)
             set_alto_shape_from_coords(reg_alto, reg_page)
-            self.set_alto_styleref_from_textstyle(reg_alto, reg_page)
+            self.textstyle_mgr.set_alto_styleref_from_textstyle(reg_alto, reg_page)
             if reg_page_type == 'Text':
                 self._convert_textlines(reg_alto, reg_page)
             elif reg_page_type == 'Table':
@@ -194,8 +194,3 @@ class OcrdPageAltoConverter():
             else:
                 raise ValueError('Unhandled region type %s' % reg_page_type)
 
-
-    def set_alto_styleref_from_textstyle(self, reg_alto, reg_page):
-        textstyle = reg_page.get_TextStyle() if hasattr(reg_page, 'get_TextStyle') else None
-        if textstyle:
-            reg_alto.set('STYLEREFS', self.textstyle_mgr.from_textstyle(textstyle))

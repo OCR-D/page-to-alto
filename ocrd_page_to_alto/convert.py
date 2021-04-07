@@ -105,26 +105,10 @@ class OcrdPageAltoConverter():
 
         if dummy_printspace:
             self.logger.warning("PAGE-XML has neither Border nor PrintSpace")
-            alto_topmargin = ET.SubElement(self.alto_page, 'TopMargin')
-            setxml(alto_topmargin, 'VPOS', 0)
-            setxml(alto_topmargin, 'HPOS', 0)
-            setxml(alto_topmargin, 'HEIGHT', 0)
-            setxml(alto_topmargin, 'WIDTH', 0)
-            alto_leftmargin = ET.SubElement(self.alto_page, 'LeftMargin')
-            setxml(alto_leftmargin, 'VPOS', 0)
-            setxml(alto_leftmargin, 'HPOS', 0)
-            setxml(alto_leftmargin, 'HEIGHT', 0)
-            setxml(alto_leftmargin, 'WIDTH', 0)
-            alto_rightmargin = ET.SubElement(self.alto_page, 'RightMargin')
-            setxml(alto_rightmargin, 'VPOS', 0)
-            setxml(alto_rightmargin, 'HPOS', 0)
-            setxml(alto_rightmargin, 'HEIGHT', 0)
-            setxml(alto_rightmargin, 'WIDTH', 0)
-            alto_bottommargin = ET.SubElement(self.alto_page, 'BottomMargin')
-            setxml(alto_bottommargin, 'VPOS', 0)
-            setxml(alto_bottommargin, 'HPOS', 0)
-            setxml(alto_bottommargin, 'HEIGHT', 0)
-            setxml(alto_bottommargin, 'WIDTH', 0)
+            for pos in ('Top', 'Left', 'Right', 'Bottom'):
+                margin = ET.SubElement(self.alto_page, '%sMargin' % pos)
+                for att in ('VPOS', 'HPOS', 'HEIGHT', 'WIDTH'):
+                    setxml(margin, att, 0)
         else:
             xywh = xywh_from_points(page_border.get_Coords().points)
             alto_topmargin = ET.SubElement(self.alto_page, 'TopMargin')

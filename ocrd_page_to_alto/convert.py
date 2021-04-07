@@ -89,11 +89,12 @@ class OcrdPageAltoConverter():
 
     def convert_styles(self):
         self.textstyle_mgr.to_xml(self.alto_styles)
+        # TODO ParagraphStyle
 
     def convert_reading_order(self):
         index_order = [x.id for x in self.page_page.get_AllRegions(order='reading-order', depth=0)]
         for id_cur, id_next in zip(index_order[:-1], index_order[1:]):
-            self.alto_printspace.find('*[@ID="%s"]' % id_cur).set('IDNEXT', id_next)
+            self.alto_printspace.find('.//*[@ID="%s"]' % id_cur).set('IDNEXT', id_next)
 
     def convert_border(self):
         page_width = self.page_page.imageHeight
@@ -172,6 +173,21 @@ class OcrdPageAltoConverter():
                 set_alto_shape_from_coords(word_alto, word_page)
                 word_alto.set('CONTENT', word_page.get_TextEquiv()[0].get_Unicode())
 
+    def _convert_table(self, parent_alto, parent_page, level=0):
+        if not level:
+            for reg_page in parent_page.get_TextRegion():
+                self._convert_table(parent_alto, reg_page, level=level + 1)
+        else:
+            if parent_page.get_TextRegion():
+                reg_alto = ET.SubElement(parent_alto, 'ComposedBlock')
+                set_alto_id_from_page_id(reg_alto, parent_page) # TODO not unique!
+                for reg_page in parent_page.get_TextRegion():
+                    self._convert_table(reg_alto, reg_page, level=level + 1)
+            else:
+                textblock_alto = ET.SubElement(parent_alto, 'TextBlock')
+                set_alto_id_from_page_id(textblock_alto, parent_page)
+                self._convert_textlines(textblock_alto, parent_page)
+
     def convert_text(self):
         for reg_page in self.page_page.get_AllRegions(depth=1):
             reg_page_type = reg_page.__class__.__name__[0:-10] # len('RegionType') == 10
@@ -186,9 +202,7 @@ class OcrdPageAltoConverter():
             if reg_page_type == 'Text':
                 self._convert_textlines(reg_alto, reg_page)
             elif reg_page_type == 'Table':
-                for reg_page_in_table in reg_page.get_TextRegion():
-                    reg_alto_in_table = ET.SubElement(reg_alto, 'TextBlock')
-                    self._convert_textlines(reg_alto_in_table, reg_page_in_table)
+                self._convert_table(reg_alto, reg_page)
             elif reg_page_type in ('Image', 'Separator'):
                 pass # nothing more to do
             else:

@@ -27,7 +27,6 @@ class TextStylesManager():
 
     def from_textstyle(self, textstyle):
         kwargs = {}
-        print(textstyle)
         kwargs['font_family'] = textstyle.fontFamily
         kwargs['font_type'] = 'serif' if textstyle.serif else 'sans-serif'
         kwargs['font_width'] = 'fixed' if textstyle.monospace else 'proportional'

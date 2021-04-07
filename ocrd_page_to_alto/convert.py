@@ -55,12 +55,11 @@ class OcrdPageAltoConverter():
         else:
             self.page_pcgts = parse(page_filename)
         self.page_page = self.page_pcgts.get_Page()
-        if check_words or check_border:
+        if check_words:
+            self.check_words()
+        if check_border:
             tree = ET.fromstring(to_xml(self.page_pcgts).encode('utf-8'))
-            if check_words:
-                self.check_words(tree)
-            if check_border:
-                self.check_border(tree)
+            self.check_border(tree)
         self.alto_alto, self.alto_description, self.alto_styles, self.alto_tags, self.alto_page = self.create_alto()
         self.alto_printspace = self.convert_border()
         self.textstyle_mgr = TextStylesManager()
@@ -68,14 +67,12 @@ class OcrdPageAltoConverter():
     def __str__(self):
         return ET.tostring(self.alto_alto, pretty_print=True).decode('utf-8')
 
-    def check_words(self, tree):
+    def check_words(self):
         for reg_page in self.page_page.get_AllRegions(classes=['Text']):
-            print(reg_page)
             for line_page in reg_page.get_TextLine():
-                print(line_page)
                 textequiv = line_page.get_TextEquiv()
                 if any(x.Unicode for x in textequiv) and not line_page.get_Word():
-                    raise ValueError("Line %s has TextEquiv but not words, so cannot be converted to ALTO without losing information. Use --no-skip-words to override" % line_page.id)
+                    raise ValueError("Line %s has TextEquiv but not words, so cannot be converted to ALTO without losing information. Use --no-check-words to override" % line_page.id)
 
     def check_border(self, tree):
         if tree.find('.//page:Border', NAMESPACES) is None and tree.find('.//page:PrintSpace', NAMESPACES) is None:

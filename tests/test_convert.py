@@ -20,24 +20,24 @@ def test_create_alto():
 def test_convert1():
     c = OcrdPageAltoConverter(page_filename='tests/assets/kant_aufklaerung_1784/data/OCR-D-GT-PAGE/PAGE_0017_PAGE.xml')
     c.convert()
-    print(c)
+    # print(c)
     # assert 0
 
 def test_convert2():
     c = OcrdPageAltoConverter(page_filename='tests/assets/origin/Blumbach/extra_regions.xml')
     c.convert()
-    print(c)
+    # print(c)
     # assert 0
 
 def test_convert3():
     c = OcrdPageAltoConverter(page_filename='tests/assets/origin/Blumbach/extra_regions.xml')
     c.convert()
-    print(c)
+    # print(c)
     # assert 0
 
 def test_convert_no_words():
-    with raises(ValueError) as e:
-        OcrdPageAltoConverter(page_filename='tests/assets/SBB0000F29300010000/data/OCR-D-GT-PAGE/FILE_0001_FULLTEXT.xml')
+    with raises(ValueError, match='Line the-bad-one has.*not words'):
+        OcrdPageAltoConverter(check_border=False, page_filename='tests/data/content-no-words.page.xml')
 
 if __name__ == "__main__":
     main([__file__])

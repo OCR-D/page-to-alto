@@ -8,14 +8,10 @@ def set_alto_xywh_from_coords(reg_alto, reg_page, classes=None):
     if classes is None:
         classes = ['HEIGHT', 'WIDTH', 'HPOS', 'VPOS']
     xywh = xywh_from_points(reg_page.get_Coords().points)
-    if 'HEIGHT' in classes:
-        reg_alto.set('HEIGHT', str(xywh['h']))
-    if 'WIDTH' in classes:
-        reg_alto.set('WIDTH', str(xywh['w']))
-    if 'HPOS' in classes:
-        reg_alto.set('HPOS', str(xywh['x']))
-    if 'VPOS' in classes:
-        reg_alto.set('VPOS', str(xywh['y']))
+    mapping = {'HEIGHT': 'h', 'WIDTH': 'w', 'HPOS': 'x', 'VPOS': 'y'}
+    for k_alto, k_xywh in mapping.items():
+        if k_alto in classes:
+            setxml(reg_alto, k_alto, str(xywh[k_xywh]))
 
 def set_alto_shape_from_coords(reg_alto, reg_page):
     shape = ET.SubElement(reg_alto, 'Shape')

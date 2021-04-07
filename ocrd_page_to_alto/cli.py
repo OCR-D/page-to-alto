@@ -22,4 +22,4 @@ def main(check_words, check_border, skip_empty_lines, filename):
     print(converter)
 
 if __name__ == '__main__':
-    main()
+    main() # pylint: disable=no-value-for-parameter

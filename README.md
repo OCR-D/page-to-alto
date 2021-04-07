@@ -7,7 +7,7 @@
 * [ ] AlternativeImage
 * [ ] unmappable regions
 * [x] handle Border
-* [ ] TextStyle
+* [x] TextStyle
 * [x] table regions
 * [ ] recursive regions
 * [ ] rotation

@@ -56,5 +56,12 @@ def test_convert_processingstep():
     tree = ET.fromstring(str(c).encode('utf-8'))
     assert tree.xpath('//alto:Processing/alto:processingSoftware/alto:softwareName', namespaces=NAMESPACES)[0].text == 'ocrd-olena-binarize'
 
+def test_layouttag():
+    c = OcrdPageAltoConverter(page_filename='tests/data/layouttag.page.xml')
+    c.convert()
+    print(c)
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    assert [x.get('LABEL') for x in tree.xpath('//alto:Tags/alto:LayoutTag', namespaces=NAMESPACES)] == ['paragraph', 'credit', 'catch-word']
+
 if __name__ == "__main__":
     main([__file__])

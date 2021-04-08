@@ -13,7 +13,7 @@ from .utils import (
     set_alto_xywh_from_coords,
     setxml
 )
-from .styles import TextStylesManager
+from .styles import TextStylesManager, LayoutTagManager
 
 NAMESPACES = {**NAMESPACES_}
 NAMESPACES['xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
@@ -66,6 +66,7 @@ class OcrdPageAltoConverter():
         self.alto_alto, self.alto_description, self.alto_styles, self.alto_tags, self.alto_page = self.create_alto()
         self.alto_printspace = self.convert_border()
         self.textstyle_mgr = TextStylesManager()
+        self.layouttag_mgr = LayoutTagManager()
 
     def __str__(self):
         return ET.tostring(self.alto_alto, pretty_print=True).decode('utf-8')
@@ -103,6 +104,7 @@ class OcrdPageAltoConverter():
     def convert_styles(self):
         self.textstyle_mgr.to_xml(self.alto_styles)
         # TODO ParagraphStyle
+        self.layouttag_mgr.to_xml(self.alto_tags)
 
     def convert_reading_order(self):
         index_order = [x.id for x in self.page_page.get_AllRegions(order='reading-order', depth=0)]
@@ -204,6 +206,7 @@ class OcrdPageAltoConverter():
                 set_alto_xywh_from_coords(word_alto, word_page)
                 set_alto_shape_from_coords(word_alto, word_page)
                 set_alto_lang_from_page_lang(word_alto, word_page)
+                self.textstyle_mgr.set_alto_styleref_from_textstyle(word_alto, word_page)
                 word_alto.set('CONTENT', word_page.get_TextEquiv()[0].get_Unicode())
 
     def _convert_table(self, parent_alto, parent_page, level=0):
@@ -235,6 +238,7 @@ class OcrdPageAltoConverter():
             set_alto_shape_from_coords(reg_alto, reg_page)
             set_alto_lang_from_page_lang(reg_alto, reg_page)
             self.textstyle_mgr.set_alto_styleref_from_textstyle(reg_alto, reg_page)
+            self.layouttag_mgr.set_alto_tag_from_type(reg_alto, reg_page)
             if reg_page_type == 'Text':
                 self._convert_textlines(reg_alto, reg_page)
             elif reg_page_type == 'Table':

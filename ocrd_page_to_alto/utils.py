@@ -1,5 +1,6 @@
 from lxml import etree as ET
 from ocrd_utils import xywh_from_points
+import langcodes
 
 def setxml(el, name, val):
     el.set(name, str(val))
@@ -20,3 +21,12 @@ def set_alto_shape_from_coords(reg_alto, reg_page):
 
 def set_alto_id_from_page_id(reg_alto, reg_page):
     setxml(reg_alto, 'ID', reg_page.id)
+
+def set_alto_lang_from_page_lang(reg_alto, reg_page):
+    for prefix in ('primaryL', 'secondaryL', 'l'):
+        lang_page = getattr(reg_page, f'{prefix}anguage', None)
+        if lang_page:
+            lang_alto = langcodes.find(lang_page).to_alpha3()
+            setxml(reg_alto, 'LANG',lang_alto)
+            return
+

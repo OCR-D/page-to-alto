@@ -6,8 +6,9 @@ from ocrd_utils import getLogger, xywh_from_points
 
 from .utils import (
     set_alto_id_from_page_id,
-    set_alto_xywh_from_coords,
+    set_alto_lang_from_page_lang,
     set_alto_shape_from_coords,
+    set_alto_xywh_from_coords,
     setxml
 )
 from .styles import TextStylesManager
@@ -171,6 +172,7 @@ class OcrdPageAltoConverter():
             set_alto_id_from_page_id(line_alto, line_page)
             set_alto_xywh_from_coords(line_alto, line_page)
             set_alto_shape_from_coords(line_alto, line_page)
+            set_alto_lang_from_page_lang(line_alto, line_page)
             self.textstyle_mgr.set_alto_styleref_from_textstyle(line_alto, line_page)
             # XXX ALTO does not allow TextLine without at least one String
             if is_empty_line:
@@ -181,6 +183,7 @@ class OcrdPageAltoConverter():
                 set_alto_id_from_page_id(word_alto, word_page)
                 set_alto_xywh_from_coords(word_alto, word_page)
                 set_alto_shape_from_coords(word_alto, word_page)
+                set_alto_lang_from_page_lang(word_alto, word_page)
                 word_alto.set('CONTENT', word_page.get_TextEquiv()[0].get_Unicode())
 
     def _convert_table(self, parent_alto, parent_page, level=0):
@@ -191,11 +194,13 @@ class OcrdPageAltoConverter():
             if parent_page.get_TextRegion():
                 reg_alto = ET.SubElement(parent_alto, 'ComposedBlock')
                 set_alto_id_from_page_id(reg_alto, parent_page) # TODO not unique!
+                set_alto_lang_from_page_lang(reg_alto, parent_page)
                 for reg_page in parent_page.get_TextRegion():
                     self._convert_table(reg_alto, reg_page, level=level + 1)
             else:
                 textblock_alto = ET.SubElement(parent_alto, 'TextBlock')
                 set_alto_id_from_page_id(textblock_alto, parent_page)
+                set_alto_lang_from_page_lang(textblock_alto, parent_page)
                 self._convert_textlines(textblock_alto, parent_page)
 
     def convert_text(self):
@@ -208,6 +213,7 @@ class OcrdPageAltoConverter():
             set_alto_id_from_page_id(reg_alto, reg_page)
             set_alto_xywh_from_coords(reg_alto, reg_page)
             set_alto_shape_from_coords(reg_alto, reg_page)
+            set_alto_lang_from_page_lang(reg_alto, reg_page)
             self.textstyle_mgr.set_alto_styleref_from_textstyle(reg_alto, reg_page)
             if reg_page_type == 'Text':
                 self._convert_textlines(reg_alto, reg_page)

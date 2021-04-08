@@ -1,7 +1,10 @@
 from pytest import raises, main, fixture
-from ocrd_page_to_alto.convert import OcrdPageAltoConverter
-from tests.assets import Assets
+from lxml import etree as ET
+
+from ocrd_page_to_alto.convert import OcrdPageAltoConverter, NAMESPACES
 from ocrd_utils import initLogging
+
+from tests.assets import Assets
 
 # @fixture
 # def assets():
@@ -38,6 +41,14 @@ def test_convert3():
 def test_convert_no_words():
     with raises(ValueError, match='Line the-bad-one has.*not words'):
         OcrdPageAltoConverter(check_border=False, page_filename='tests/data/content-no-words.page.xml')
+
+def test_convert_language():
+    c = OcrdPageAltoConverter(page_filename='tests/data/language.page.xml')
+    c.convert()
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    assert tree.xpath('//*[@ID="r1"]/@LANG', namespaces=NAMESPACES)[0] == 'vol'
+    assert tree.xpath('//*[@ID="r1-l1"]/@LANG', namespaces=NAMESPACES)[0] == 'nob'
+    assert tree.xpath('//*[@ID="r1-l1-w1"]/@LANG', namespaces=NAMESPACES)[0] == 'epo'
 
 if __name__ == "__main__":
     main([__file__])

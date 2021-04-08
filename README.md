@@ -8,9 +8,20 @@
 * [ ] unmappable regions
 * [x] handle Border
 * [x] TextStyle
+* [ ] ParagraphStyle
 * [x] table regions
 * [ ] recursive regions
 * [ ] rotation
 * [x] reading order
 * [x] input PAGE-XML not having words
 * [ ] multiple pc:TextEquivs
+* [x] language
+* [ ] script
+* [ ] kerning
+* [ ] underlineStyle
+* [ ] bgColour
+* [ ] bgColourRgb
+* [ ] reverseVideo
+* [ ] xHeight
+* [ ] letterSpaced
+* [ ] ProcessingStep

@@ -1,4 +1,6 @@
 # pylint: disable=no-member, c-extension-no-member
+from json import dumps
+
 from lxml import etree as ET
 from ocrd_models.ocrd_page import parse, parseString, to_xml
 from ocrd_models.constants import NAMESPACES as NAMESPACES_
@@ -162,6 +164,24 @@ class OcrdPageAltoConverter():
         alto_sourceimageinformation = ET.SubElement(self.alto_description, 'sourceImageInformation')
         alto_filename = ET.SubElement(alto_sourceimageinformation, 'fileName')
         alto_filename.text = self.page_page.imageFilename
+        page_metadata = self.page_pcgts.get_Metadata()
+        if not page_metadata:
+            return
+        for step_idx, step_page in enumerate([x for x in page_metadata.get_MetadataItem() if x.get_type() == 'processingStep']):
+            step_alto = ET.SubElement(self.alto_description, 'Processing')
+            setxml(step_alto, 'ID', f'{step_page.value}-{step_idx}')
+            step_alto_description = ET.SubElement(step_alto, 'processingStepDescription')
+            step_alto_description.text = step_page.name
+            if step_page.get_Labels():
+                step_alto_settings = ET.SubElement(step_alto, 'processingStepSettings')
+                json = {}
+                for label in step_page.get_Labels()[0].get_Label():
+                    json[label.get_type()] = label.value
+                step_alto_settings.text = dumps(json)
+            step_alto_software = ET.SubElement(step_alto, 'processingSoftware')
+            step_alto_software_name = ET.SubElement(step_alto_software, 'softwareName')
+            step_alto_software_name.text = step_page.value
+
 
     def _convert_textlines(self, reg_alto, reg_page):
         for line_page in reg_page.get_TextLine():

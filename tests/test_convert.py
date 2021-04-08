@@ -50,5 +50,11 @@ def test_convert_language():
     assert tree.xpath('//*[@ID="r1-l1"]/@LANG', namespaces=NAMESPACES)[0] == 'nob'
     assert tree.xpath('//*[@ID="r1-l1-w1"]/@LANG', namespaces=NAMESPACES)[0] == 'epo'
 
+def test_convert_processingstep():
+    c = OcrdPageAltoConverter(page_filename='tests/data/OCR-D-OCR-TESS_00001.xml')
+    c.convert()
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    assert tree.xpath('//alto:Processing/alto:processingSoftware/alto:softwareName', namespaces=NAMESPACES)[0].text == 'ocrd-olena-binarize'
+
 if __name__ == "__main__":
     main([__file__])

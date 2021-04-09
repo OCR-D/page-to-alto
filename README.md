@@ -8,7 +8,7 @@
 * [ ] unmappable regions
 * [x] handle Border
 * [x] TextStyle
-* [ ] ParagraphStyle
+* [x] ParagraphStyle
 * [x] table regions
 * [ ] recursive regions
 * [ ] rotation
@@ -16,12 +16,12 @@
 * [x] input PAGE-XML not having words
 * [ ] multiple pc:TextEquivs
 * [x] language
-* [ ] script
-* [ ] kerning
-* [ ] underlineStyle
-* [ ] bgColour
-* [ ] bgColourRgb
-* [ ] reverseVideo
-* [ ] xHeight
-* [ ] letterSpaced
-* [ ] ProcessingStep
+* [X] ~~script~~ no equivalent in ALTO :(
+* [X] ~~kerning~~ no equivalent in ALTO :(
+* [X] ~~underlineStyle~~ no equivalent in ALTO :(
+* [X] ~~bgColour~~ no equivalent in ALTO :(
+* [X] ~~bgColourRgb~~ no equivalent in ALTO :(
+* [X] ~~reverseVideo~~ no equivalent in ALTO :(
+* [X] ~~xHeight~~ no equivalent in ALTO :(
+* [X] ~~letterSpaced~~ no equivalent in ALTO :(
+* [x] ProcessingStep

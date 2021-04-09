@@ -13,7 +13,7 @@ from .utils import (
     set_alto_xywh_from_coords,
     setxml
 )
-from .styles import TextStylesManager, LayoutTagManager
+from .styles import TextStylesManager, ParagraphStyleManager, LayoutTagManager
 
 NAMESPACES = {**NAMESPACES_}
 NAMESPACES['xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
@@ -66,6 +66,7 @@ class OcrdPageAltoConverter():
         self.alto_alto, self.alto_description, self.alto_styles, self.alto_tags, self.alto_page = self.create_alto()
         self.alto_printspace = self.convert_border()
         self.textstyle_mgr = TextStylesManager()
+        self.parastyle_mgr = ParagraphStyleManager()
         self.layouttag_mgr = LayoutTagManager()
 
     def __str__(self):
@@ -107,7 +108,7 @@ class OcrdPageAltoConverter():
 
     def convert_styles(self):
         self.textstyle_mgr.to_xml(self.alto_styles)
-        # TODO ParagraphStyle
+        self.parastyle_mgr.to_xml(self.alto_styles)
         self.layouttag_mgr.to_xml(self.alto_tags)
 
     def convert_reading_order(self):
@@ -242,6 +243,7 @@ class OcrdPageAltoConverter():
             set_alto_shape_from_coords(reg_alto, reg_page)
             set_alto_lang_from_page_lang(reg_alto, reg_page)
             self.textstyle_mgr.set_alto_styleref_from_textstyle(reg_alto, reg_page)
+            self.parastyle_mgr.set_alto_styleref_from_textstyle(reg_alto, reg_page)
             self.layouttag_mgr.set_alto_tag_from_type(reg_alto, reg_page)
             if reg_page_type == 'Text':
                 self._convert_textlines(reg_alto, reg_page)

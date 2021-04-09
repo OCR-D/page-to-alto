@@ -43,25 +43,27 @@ def test_convert_no_words():
         OcrdPageAltoConverter(check_border=False, page_filename='tests/data/content-no-words.page.xml')
 
 def test_convert_language():
-    c = OcrdPageAltoConverter(page_filename='tests/data/language.page.xml')
-    c.convert()
+    c = OcrdPageAltoConverter(page_filename='tests/data/language.page.xml').convert()
     tree = ET.fromstring(str(c).encode('utf-8'))
     assert tree.xpath('//*[@ID="r1"]/@LANG', namespaces=NAMESPACES)[0] == 'vol'
     assert tree.xpath('//*[@ID="r1-l1"]/@LANG', namespaces=NAMESPACES)[0] == 'nob'
     assert tree.xpath('//*[@ID="r1-l1-w1"]/@LANG', namespaces=NAMESPACES)[0] == 'epo'
 
 def test_convert_processingstep():
-    c = OcrdPageAltoConverter(page_filename='tests/data/OCR-D-OCR-TESS_00001.xml')
-    c.convert()
+    c = OcrdPageAltoConverter(page_filename='tests/data/OCR-D-OCR-TESS_00001.xml').convert()
     tree = ET.fromstring(str(c).encode('utf-8'))
     assert tree.xpath('//alto:Processing/alto:processingSoftware/alto:softwareName', namespaces=NAMESPACES)[0].text == 'ocrd-olena-binarize'
 
 def test_layouttag():
-    c = OcrdPageAltoConverter(page_filename='tests/data/layouttag.page.xml')
-    c.convert()
-    print(c)
+    c = OcrdPageAltoConverter(page_filename='tests/data/layouttag.page.xml').convert()
     tree = ET.fromstring(str(c).encode('utf-8'))
-    assert [x.get('LABEL') for x in tree.xpath('//alto:Tags/alto:LayoutTag', namespaces=NAMESPACES)] == ['paragraph', 'credit', 'catch-word']
+    assert [x.get('LABEL') for x in tree.xpath('//alto:Tags/alto:LayoutTag', namespaces=NAMESPACES)] == ['paragraph']
+
+def test_pararaphstyle():
+    c = OcrdPageAltoConverter(page_filename='tests/data/align.page.xml').convert()
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    assert tree.xpath('//alto:ParagraphStyle', namespaces=NAMESPACES)[0].get('ALIGN') == 'Block'
+    assert 'parastyle-Block---None---None---None---None' in tree.xpath('//alto:TextBlock', namespaces=NAMESPACES)[0].get('STYLEREFS')
 
 if __name__ == "__main__":
     main([__file__])

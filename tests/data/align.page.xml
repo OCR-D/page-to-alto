@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pc:PcGts xmlns:pc="http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15 http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15/pagecontent.xsd" pcGtsId="OCR-D-OCR-CALAMARI_00001">
+    <pc:Page imageFilename="OCR-D-IMG/044417.jpg" imageWidth="3195" imageHeight="4370" type="content" primaryLanguage="Welsh">
+        <pc:Border>
+            <pc:Coords points="61,254 2770,254 2770,4360 61,4360"/>
+        </pc:Border>
+        <pc:TextRegion id="r1" align="justify">
+            <pc:Coords points="0,0 1,1 1,0 0,1"/>
+            <pc:TextLine id="r1-l1" primaryLanguage="Norwegian Bokmål" type="credit">
+                <pc:Coords points="0,0 1,1 1,0 0,1"/>
+                <pc:Word id="r1-l1-w1" language="Esperanto" type="catch-word">
+                    <pc:Coords points="0,0 1,1 1,0 0,1"/>
+                    <pc:TextEquiv>
+                        <pc:Unicode>patrofikulo</pc:Unicode>
+                    </pc:TextEquiv>
+                </pc:Word>
+                <pc:TextEquiv>
+                    <pc:Unicode>patrofikulo</pc:Unicode>
+                </pc:TextEquiv>
+            </pc:TextLine>
+        </pc:TextRegion>
+    </pc:Page>
+</pc:PcGts>

@@ -2,6 +2,8 @@
 
 > Convert PAGE (2019) to ALTO (4)
 
+[![image](https://circleci.com/gh/kba/page-to-alto.svg?style=svg)](https://circleci.com/gh/kba/page-to-alto)
+
 ## TODO
 
 * [ ] AlternativeImage

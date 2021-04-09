@@ -71,6 +71,9 @@ class OcrdPageAltoConverter():
     def __str__(self):
         return ET.tostring(self.alto_alto, pretty_print=True).decode('utf-8')
 
+    def to_etree(self):
+        return self.alto_alto
+
     def check_words(self):
         for reg_page in self.page_page.get_AllRegions(classes=['Text']):
             for line_page in reg_page.get_TextLine():
@@ -100,6 +103,7 @@ class OcrdPageAltoConverter():
         self.convert_text()
         self.convert_reading_order()
         self.convert_styles()
+        return self
 
     def convert_styles(self):
         self.textstyle_mgr.to_xml(self.alto_styles)

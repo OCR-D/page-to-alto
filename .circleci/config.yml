@@ -1,0 +1,44 @@
+version: 2.1
+
+executors:
+  ubuntu1804:
+    docker:
+      - image: ubuntu:18.04
+
+commands:
+  install-test:
+    parameters:
+      python-version:
+        type: string
+    steps:
+      - run: apt-get update
+      - run: apt-get install -y software-properties-common
+      - run: add-apt-repository -y ppa:deadsnakes/ppa
+      - run: apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Europe/Berlin apt-get install -y --no-install-recommends make git curl python3-pip python<<parameters.python-version>> python<<parameters.python-version>>-venv
+      - checkout
+      - run: python<<parameters.python-version>> -mvenv venv<<parameters.python-version>>
+      - run: source venv<<parameters.python-version>>/bin/activate; make install-dev PYTHON=python<<parameters.python-version>>
+      - run: source venv<<parameters.python-version>>/bin/activate; make assets test PYTHON=python<<parameters.python-version>>
+
+jobs:
+
+  build-python:
+    executor: ubuntu1804
+    parameters:
+      python-version:
+        type: string
+    steps:
+      - install-test:
+          python-version: <<parameters.python-version>>
+
+workflows:
+  build:
+    jobs:
+      - build-python:
+          matrix:
+            parameters:
+              python-version:
+                - '3.6'
+                - '3.7'
+                - '3.8'
+                - '3.9'

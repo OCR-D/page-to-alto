@@ -1,4 +1,5 @@
-PIP ?= pip3
+PYTHON = python3
+PIP = pip3
 
 # BEGIN-EVAL makefile-parser --make-help Makefile
 
@@ -24,9 +25,11 @@ submodules:
 
 # Install deps
 deps:
+	$(PIP) install -U pip
 	$(PIP) install -r requirements.txt
 
 deps-dev:
+	$(PIP) install -U pip
 	$(PIP) install -r requirements.dev.txt
 
 # Install ocrd_page_to_alto
@@ -38,7 +41,7 @@ install-dev: deps deps-dev
 	$(PIP) install -e .
 
 # Copy OCR-D/assets to tests/assets
-assets:
+assets: submodules
 	rm -rf tests/assets
 	mkdir -p tests/assets
 	cp -r repo/assets/data/* tests/assets
@@ -46,4 +49,4 @@ assets:
 
 # Run tests
 test:
-	pytest tests
+	$(PYTHON) -mpytest tests

@@ -16,7 +16,6 @@ class TextStylesManager():
         if any(k not in self.fields for k in kwargs):
             raise ValueError(f"Unknown fields in {kwargs}")
         key = self.prefix + '---'.join([str(kwargs.get(x, None)).replace(' ', '%20') for x in self.fields])
-        print(key)
         if key not in self.elements:
             self._elements.add(key)
         return key

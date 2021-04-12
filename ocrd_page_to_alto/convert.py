@@ -11,7 +11,8 @@ from .utils import (
     set_alto_lang_from_page_lang,
     set_alto_shape_from_coords,
     set_alto_xywh_from_coords,
-    setxml
+    setxml,
+    get_nth_textequiv,
 )
 from .styles import TextStylesManager, ParagraphStyleManager, LayoutTagManager
 
@@ -40,12 +41,14 @@ REGION_PAGE_TO_ALTO = {
 
 class OcrdPageAltoConverter():
 
-    def __init__(self, *, check_words=True, check_border=True, skip_empty_lines=False, page_filename=None, page_etree=None, pcgts=None, logger=None):
+    def __init__(self, *, check_words=True, check_border=True, skip_empty_lines=False, textequiv_index=0, textequiv_fallback_strategy='last', page_filename=None, page_etree=None, pcgts=None, logger=None):
         """
         Keyword Args:
             check_words (boolean): Whether to check if PAGE-XML contains any words before conversion and fail if not
             check_border (boolean): Whether to abort if neither Border nor PrintSpace is defined
             skip_empty_lines (boolean): Whether to omit empty lines completely (True) or create a placeholder empty String in ALTO (False)
+            textequiv_index (int): @index of the TextEquiv to choose
+            textequiv_fallback_strategy ("raise"|"first"|"last"): Strategy to handle case of no matchin TextEquiv by textequiv_index
         """
         if not (page_filename or page_etree or pcgts):
             raise ValueError("Must pass either pcgts, page_etree or page_filename to constructor")
@@ -63,6 +66,8 @@ class OcrdPageAltoConverter():
         if check_border:
             tree = ET.fromstring(to_xml(self.page_pcgts).encode('utf-8'))
             self.check_border(tree)
+        self.textequiv_index = textequiv_index
+        self.textequiv_fallback_strategy = textequiv_fallback_strategy
         self.alto_alto, self.alto_description, self.alto_styles, self.alto_tags, self.alto_page = self.create_alto()
         self.alto_printspace = self.convert_border()
         self.textstyle_mgr = TextStylesManager()
@@ -194,6 +199,7 @@ class OcrdPageAltoConverter():
         for line_page in reg_page.get_TextLine():
             is_empty_line = not(line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode())
             if is_empty_line and self.skip_empty_lines:
+                self.logger.debug("Skipping empty line '%s'", line_page.id)
                 return
             line_alto = ET.SubElement(reg_alto, 'TextLine')
             set_alto_id_from_page_id(line_alto, line_page)
@@ -204,6 +210,7 @@ class OcrdPageAltoConverter():
             # XXX ALTO does not allow TextLine without at least one String
             if is_empty_line:
                 word_alto_empty = ET.SubElement(line_alto, 'String')
+                word_alto_empty.set('ID', '%s-word0' % line_page.id)
                 word_alto_empty.set('CONTENT', '')
             for word_page in line_page.get_Word():
                 word_alto = ET.SubElement(line_alto, 'String')
@@ -212,7 +219,7 @@ class OcrdPageAltoConverter():
                 set_alto_shape_from_coords(word_alto, word_page)
                 set_alto_lang_from_page_lang(word_alto, word_page)
                 self.textstyle_mgr.set_alto_styleref_from_textstyle(word_alto, word_page)
-                word_alto.set('CONTENT', word_page.get_TextEquiv()[0].get_Unicode())
+                word_alto.set('CONTENT', get_nth_textequiv(word_page, self.textequiv_index, self.textequiv_fallback_strategy))
 
     def _convert_table(self, parent_alto, parent_page, level=0):
         if not level:

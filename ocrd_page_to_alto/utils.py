@@ -30,3 +30,21 @@ def set_alto_lang_from_page_lang(reg_alto, reg_page):
             setxml(reg_alto, 'LANG',lang_alto)
             return
 
+def get_nth_textequiv(reg_page, textequiv_index, textequiv_fallback_strategy):
+    if textequiv_fallback_strategy not in ('raise', 'first', 'last'):
+        raise RuntimeError("Invalid value for textequiv_fallback_strategy: %s" % textequiv_fallback_strategy)
+    textequivs = reg_page.get_TextEquiv()
+    if not len(textequivs):
+        if textequiv_fallback_strategy == 'raise':
+            raise ValueError("PAGE element '%s' has no TextEquivs and fallback strategy is to raise" % reg_page.id)
+        return ''
+    if len(textequivs) < textequiv_index + 1:
+        if textequiv_fallback_strategy == 'raise':
+            raise ValueError("PAGE element '%s' has only %d TextEquiv elements so cannot choose the %s%s and fallback strategy is to raise" % (
+                reg_page.id, len(textequivs), textequiv_index + 1, 'st' if textequiv_index == 0 else 'nd'))
+        elif textequiv_fallback_strategy == 'first':
+            return textequivs[0].Unicode
+        else:
+            return textequivs[-1].Unicode
+    else:
+        return textequivs[textequiv_index].Unicode

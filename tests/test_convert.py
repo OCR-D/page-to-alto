@@ -65,5 +65,13 @@ def test_pararaphstyle():
     assert tree.xpath('//alto:ParagraphStyle', namespaces=NAMESPACES)[0].get('ALIGN') == 'Block'
     assert 'parastyle-Block---None---None---None---None' in tree.xpath('//alto:TextBlock', namespaces=NAMESPACES)[0].get('STYLEREFS')
 
+def test_dummy():
+    c = OcrdPageAltoConverter(check_border=False, dummy_textline=True, dummy_word=True, page_filename='tests/data/region_no_line.page.xml').convert()
+    print(c)
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    assert len(tree.xpath('//alto:TextLine[@ID="r0-dummy-TextLine"]', namespaces=NAMESPACES)) == 1
+    assert len(tree.xpath('//alto:String[@ID="r0-dummy-TextLine-dummy-Word"]', namespaces=NAMESPACES)) == 1
+    assert tree.xpath('//alto:String[@ID="r0-dummy-TextLine-dummy-Word"]', namespaces=NAMESPACES)[0].get('CONTENT') == 'CONTENT BUT NO LINES'
+
 if __name__ == "__main__":
     main([__file__])

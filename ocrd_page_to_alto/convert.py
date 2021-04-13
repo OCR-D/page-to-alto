@@ -2,7 +2,12 @@
 from json import dumps
 
 from lxml import etree as ET
-from ocrd_models.ocrd_page import parse, parseString, to_xml
+from ocrd_models.ocrd_page import (
+    TextLineType,
+    WordType,
+    parse,
+    parseString,
+    to_xml)
 from ocrd_models.constants import NAMESPACES as NAMESPACES_
 from ocrd_utils import getLogger, xywh_from_points
 
@@ -12,8 +17,7 @@ from .utils import (
     set_alto_shape_from_coords,
     set_alto_xywh_from_coords,
     setxml,
-    get_nth_textequiv,
-)
+    get_nth_textequiv)
 from .styles import TextStylesManager, ParagraphStyleManager, LayoutTagManager
 
 NAMESPACES = {**NAMESPACES_}
@@ -41,7 +45,21 @@ REGION_PAGE_TO_ALTO = {
 
 class OcrdPageAltoConverter():
 
-    def __init__(self, *, check_words=True, check_border=True, skip_empty_lines=False, textequiv_index=0, textequiv_fallback_strategy='last', page_filename=None, page_etree=None, pcgts=None, logger=None):
+    def __init__(
+        self,
+        *,
+        check_words=True,
+        check_border=True,
+        skip_empty_lines=False,
+        textequiv_index=0,
+        textequiv_fallback_strategy='last',
+        page_filename=None,
+        dummy_textline=True,
+        dummy_word=True,
+        page_etree=None,
+        pcgts=None,
+        logger=None
+    ):
         """
         Keyword Args:
             check_words (boolean): Whether to check if PAGE-XML contains any words before conversion and fail if not
@@ -49,10 +67,14 @@ class OcrdPageAltoConverter():
             skip_empty_lines (boolean): Whether to omit empty lines completely (True) or create a placeholder empty String in ALTO (False)
             textequiv_index (int): @index of the TextEquiv to choose
             textequiv_fallback_strategy ("raise"|"first"|"last"): Strategy to handle case of no matchin TextEquiv by textequiv_index
+            dummy_textline (boolean): Whether to create a TextLine for regions that have TextEquiv/Unicode but no TextLine
+            dummy_word (boolean): Whether to create a Word for TextLine that have TextEquiv/Unicode but no Word
         """
         if not (page_filename or page_etree or pcgts):
             raise ValueError("Must pass either pcgts, page_etree or page_filename to constructor")
         self.skip_empty_lines = skip_empty_lines
+        self.dummy_textline = dummy_textline
+        self.dummy_word = dummy_word
         self.logger = logger if logger else getLogger('page-to-alto')
         if pcgts:
             self.page_pcgts = pcgts
@@ -196,8 +218,10 @@ class OcrdPageAltoConverter():
 
 
     def _convert_textlines(self, reg_alto, reg_page):
+        if self.dummy_textline:
+            self.set_dummy_line_for_region(reg_page)
         for line_page in reg_page.get_TextLine():
-            is_empty_line = not(line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode())
+            is_empty_line = not(line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode()) and not(line_page.get_Word())
             if is_empty_line and self.skip_empty_lines:
                 self.logger.debug("Skipping empty line '%s'", line_page.id)
                 return
@@ -207,11 +231,12 @@ class OcrdPageAltoConverter():
             set_alto_shape_from_coords(line_alto, line_page)
             set_alto_lang_from_page_lang(line_alto, line_page)
             self.textstyle_mgr.set_alto_styleref_from_textstyle(line_alto, line_page)
-            # XXX ALTO does not allow TextLine without at least one String
             if is_empty_line:
                 word_alto_empty = ET.SubElement(line_alto, 'String')
                 word_alto_empty.set('ID', '%s-word0' % line_page.id)
                 word_alto_empty.set('CONTENT', '')
+            if self.dummy_word:
+                self.set_dummy_word_for_textline(line_page)
             for word_page in line_page.get_Word():
                 word_alto = ET.SubElement(line_alto, 'String')
                 set_alto_id_from_page_id(word_alto, word_page)
@@ -261,3 +286,20 @@ class OcrdPageAltoConverter():
             else:
                 raise ValueError('Unhandled region type %s' % reg_page_type)
 
+    def _set_dummy_x_for_y(self, el, parent_level):
+        child_level = 'Word' if parent_level == 'TextLine' else 'TextLine'
+        child_type = WordType if parent_level == 'TextLine' else TextLineType
+        children = getattr(el, 'get_%s' % child_level)()
+        if not children:
+            self.logger.debug("%s '%s' has no %s", parent_level, el.id, child_level)
+            if len(el.get_TextEquiv()) and any(x.Unicode for x in el.get_TextEquiv()):
+                child_content = get_nth_textequiv(el, self.textequiv_index, self.textequiv_fallback_strategy)
+                child_id = '%s-dummy-%s' % (el.id, child_level)
+                self.logger.info("%s '%s' does have TextEquiv/Unicode though, creating dummy %s '%s'", parent_level, el.id, child_level, child_id)
+                getattr(el, 'add_%s' % child_level)(child_type(id=child_id, Coords=el.get_Coords(), TextEquiv=el.get_TextEquiv()))
+
+    def set_dummy_word_for_textline(self, line_page):
+        self._set_dummy_x_for_y(line_page, 'TextLine')
+
+    def set_dummy_line_for_region(self, reg_page):
+        self._set_dummy_x_for_y(reg_page, 'TextRgion')

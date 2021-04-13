@@ -48,3 +48,4 @@ def get_nth_textequiv(reg_page, textequiv_index, textequiv_fallback_strategy):
             return textequivs[-1].Unicode
     else:
         return textequivs[textequiv_index].Unicode
+

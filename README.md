@@ -16,7 +16,7 @@
 * [ ] rotation
 * [x] reading order
 * [x] input PAGE-XML not having words
-* [ ] multiple pc:TextEquivs
+* [x] multiple pc:TextEquivs
 * [x] language
 * [X] ~~script~~ no equivalent in ALTO :(
 * [X] ~~kerning~~ no equivalent in ALTO :(

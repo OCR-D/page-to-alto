@@ -12,10 +12,10 @@
 * [x] TextStyle
 * [x] ParagraphStyle
 * [x] table regions
-* [ ] recursive regions
+* [ ] recursive regions, #
 * [ ] rotation
 * [x] reading order
-* [x] input PAGE-XML not having words
+* [x] input PAGE-XML not having words #5
 * [x] multiple pc:TextEquivs
 * [x] language
 * [X] ~~script~~ no equivalent in ALTO :(

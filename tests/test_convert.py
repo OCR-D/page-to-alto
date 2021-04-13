@@ -58,6 +58,8 @@ def test_layouttag():
     c = OcrdPageAltoConverter(page_filename='tests/data/layouttag.page.xml').convert()
     tree = ET.fromstring(str(c).encode('utf-8'))
     assert [x.get('LABEL') for x in tree.xpath('//alto:Tags/alto:LayoutTag', namespaces=NAMESPACES)] == ['paragraph']
+    assert len(tree.xpath('//*[@TYPE="paragraph"]')) == 1
+    assert len(tree.xpath('//*[@TYPE="catch-word"]')) == 0 # @TYPE only allowed for BlockType
 
 def test_pararaphstyle():
     c = OcrdPageAltoConverter(page_filename='tests/data/align.page.xml').convert()

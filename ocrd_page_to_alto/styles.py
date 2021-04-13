@@ -122,5 +122,6 @@ class LayoutTagManager(TextStylesManager):
     def set_alto_tag_from_type(self, reg_alto, reg_page):
         typ = reg_page.get_type() if hasattr(reg_page, 'get_type') else None
         if typ:
+            reg_alto.set('TYPE', typ)
             reg_alto.set('TAGREFS', self.get_id(label=typ))
 

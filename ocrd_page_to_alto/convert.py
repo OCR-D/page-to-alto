@@ -124,6 +124,9 @@ class OcrdPageAltoConverter():
         alto_page = ET.SubElement(alto_layout, 'Page')
         setxml(alto_page, 'ID', getattr(self.page_pcgts, 'pcGtsId', 'page0'))
         setxml(alto_page, 'PHYSICAL_IMG_NR', 0)
+        page_type = self.page_page.get_type()
+        if page_type:
+            setxml(alto_page, 'PAGECLASS', page_type)
         return alto_alto, alto_description, alto_styles, alto_tags, alto_page
 
     def convert(self):
@@ -293,7 +296,6 @@ class OcrdPageAltoConverter():
         if not children:
             self.logger.debug("%s '%s' has no %s", parent_level, el.id, child_level)
             if len(el.get_TextEquiv()) and any(x.Unicode for x in el.get_TextEquiv()):
-                child_content = get_nth_textequiv(el, self.textequiv_index, self.textequiv_fallback_strategy)
                 child_id = '%s-dummy-%s' % (el.id, child_level)
                 self.logger.info("%s '%s' does have TextEquiv/Unicode though, creating dummy %s '%s'", parent_level, el.id, child_level, child_id)
                 getattr(el, 'add_%s' % child_level)(child_type(id=child_id, Coords=el.get_Coords(), TextEquiv=el.get_TextEquiv()))

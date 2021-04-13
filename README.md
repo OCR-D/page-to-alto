@@ -12,7 +12,9 @@
 * [x] TextStyle
 * [x] ParagraphStyle
 * [x] table regions
-* [ ] recursive regions, #
+* [ ] recursive regions for *Region
+* [x] Set `PAGECLASS` from `pc:Page/@type` #4
+* [ ] Layers / z-level via `StructureTag`? #4
 * [ ] rotation
 * [x] reading order
 * [x] input PAGE-XML not having words #5

@@ -69,11 +69,15 @@ def test_pararaphstyle():
 
 def test_dummy():
     c = OcrdPageAltoConverter(check_border=False, dummy_textline=True, dummy_word=True, page_filename='tests/data/region_no_line.page.xml').convert()
-    print(c)
     tree = ET.fromstring(str(c).encode('utf-8'))
     assert len(tree.xpath('//alto:TextLine[@ID="r0-dummy-TextLine"]', namespaces=NAMESPACES)) == 1
     assert len(tree.xpath('//alto:String[@ID="r0-dummy-TextLine-dummy-Word"]', namespaces=NAMESPACES)) == 1
     assert tree.xpath('//alto:String[@ID="r0-dummy-TextLine-dummy-Word"]', namespaces=NAMESPACES)[0].get('CONTENT') == 'CONTENT BUT NO LINES'
+
+def test_pageclass():
+    c = OcrdPageAltoConverter(page_filename='tests/data/blank.page.xml').convert()
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    assert tree.xpath('//alto:Page', namespaces=NAMESPACES)[0].get('PAGECLASS') == 'blank'
 
 if __name__ == "__main__":
     main([__file__])

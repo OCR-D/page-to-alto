@@ -15,6 +15,8 @@
 * [ ] recursive regions for *Region
 * [x] Set `PAGECLASS` from `pc:Page/@type` #4
 * [ ] Layers / z-level via `StructureTag`? #4
+* [x] `<SP/>`
+* [ ] `<HYP/>`
 * [ ] rotation
 * [x] reading order
 * [x] input PAGE-XML not having words #5

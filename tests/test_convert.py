@@ -79,5 +79,11 @@ def test_pageclass():
     tree = ET.fromstring(str(c).encode('utf-8'))
     assert tree.xpath('//alto:Page', namespaces=NAMESPACES)[0].get('PAGECLASS') == 'blank'
 
+def test_sp():
+    c = OcrdPageAltoConverter(page_filename='tests/data/sp-hyp.page.xml').convert()
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    assert len(tree.xpath('//alto:SP', namespaces=NAMESPACES)) == 2
+
+
 if __name__ == "__main__":
     main([__file__])

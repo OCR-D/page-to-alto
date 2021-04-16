@@ -240,7 +240,8 @@ class OcrdPageAltoConverter():
                 word_alto_empty.set('CONTENT', '')
             if self.dummy_word:
                 self.set_dummy_word_for_textline(line_page)
-            for word_page in line_page.get_Word():
+            words_page = line_page.get_Word()
+            for word_idx, word_page in enumerate(words_page):
                 word_alto = ET.SubElement(line_alto, 'String')
                 set_alto_id_from_page_id(word_alto, word_page)
                 set_alto_xywh_from_coords(word_alto, word_page)
@@ -248,6 +249,8 @@ class OcrdPageAltoConverter():
                 set_alto_lang_from_page_lang(word_alto, word_page)
                 self.textstyle_mgr.set_alto_styleref_from_textstyle(word_alto, word_page)
                 word_alto.set('CONTENT', get_nth_textequiv(word_page, self.textequiv_index, self.textequiv_fallback_strategy))
+                if word_idx < len(words_page) - 1:
+                    ET.SubElement(line_alto, 'SP')
 
     def _convert_table(self, parent_alto, parent_page, level=0):
         if not level:

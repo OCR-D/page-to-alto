@@ -84,6 +84,10 @@ def test_sp():
     tree = ET.fromstring(str(c).encode('utf-8'))
     assert len(tree.xpath('//alto:SP', namespaces=NAMESPACES)) == 2
 
+def test_hyp():
+    c = OcrdPageAltoConverter(trailing_dash_to_hyp=True, page_filename='tests/data/sp-hyp.page.xml').convert()
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    assert tree.xpath('//alto:HYP', namespaces=NAMESPACES)
 
 if __name__ == "__main__":
     main([__file__])

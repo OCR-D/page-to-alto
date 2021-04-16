@@ -43,6 +43,8 @@ REGION_PAGE_TO_ALTO = {
     "Custom": None,
 }
 
+HYPHEN_CHARS = ['-', '⸗', '=']
+
 class OcrdPageAltoConverter():
 
     def __init__(
@@ -51,6 +53,7 @@ class OcrdPageAltoConverter():
         check_words=True,
         check_border=True,
         skip_empty_lines=False,
+        trailing_dash_to_hyp=False,
         textequiv_index=0,
         textequiv_fallback_strategy='last',
         page_filename=None,
@@ -65,6 +68,7 @@ class OcrdPageAltoConverter():
             check_words (boolean): Whether to check if PAGE-XML contains any words before conversion and fail if not
             check_border (boolean): Whether to abort if neither Border nor PrintSpace is defined
             skip_empty_lines (boolean): Whether to omit empty lines completely (True) or create a placeholder empty String in ALTO (False)
+            trailing_dash_to_hyp (boolean): Whether to add a <HYP/> element if the last word in a line ends in ``-``
             textequiv_index (int): @index of the TextEquiv to choose
             textequiv_fallback_strategy ("raise"|"first"|"last"): Strategy to handle case of no matchin TextEquiv by textequiv_index
             dummy_textline (boolean): Whether to create a TextLine for regions that have TextEquiv/Unicode but no TextLine
@@ -73,6 +77,7 @@ class OcrdPageAltoConverter():
         if not (page_filename or page_etree or pcgts):
             raise ValueError("Must pass either pcgts, page_etree or page_filename to constructor")
         self.skip_empty_lines = skip_empty_lines
+        self.trailing_dash_to_hyp = trailing_dash_to_hyp
         self.dummy_textline = dummy_textline
         self.dummy_word = dummy_word
         self.logger = logger if logger else getLogger('page-to-alto')
@@ -242,15 +247,23 @@ class OcrdPageAltoConverter():
                 self.set_dummy_word_for_textline(line_page)
             words_page = line_page.get_Word()
             for word_idx, word_page in enumerate(words_page):
+                is_last_word = word_idx == len(words_page) - 1
                 word_alto = ET.SubElement(line_alto, 'String')
                 set_alto_id_from_page_id(word_alto, word_page)
                 set_alto_xywh_from_coords(word_alto, word_page)
                 set_alto_shape_from_coords(word_alto, word_page)
                 set_alto_lang_from_page_lang(word_alto, word_page)
                 self.textstyle_mgr.set_alto_styleref_from_textstyle(word_alto, word_page)
-                word_alto.set('CONTENT', get_nth_textequiv(word_page, self.textequiv_index, self.textequiv_fallback_strategy))
-                if word_idx < len(words_page) - 1:
+                word_content = get_nth_textequiv(word_page, self.textequiv_index, self.textequiv_fallback_strategy)
+                if not is_last_word:
                     ET.SubElement(line_alto, 'SP')
+                else:
+                    if self.trailing_dash_to_hyp and word_content and word_content[-1] in HYPHEN_CHARS:
+                        hyphen_content = word_content[-1]
+                        hyp_alto = ET.SubElement(line_alto, 'HYP')
+                        hyp_alto.set('CONTENT', hyphen_content)
+                        word_content = word_content[:-1]
+                word_alto.set('CONTENT', word_content)
 
     def _convert_table(self, parent_alto, parent_page, level=0):
         if not level:

@@ -3,7 +3,9 @@ from .convert import OcrdPageAltoConverter
 from ocrd_utils import initLogging
 from ocrd.decorators import ocrd_loglevel
 
-@click.command()
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+@click.command(context_settings=CONTEXT_SETTINGS)
 @ocrd_loglevel
 @click.option('--check-words/--no-check-words', default=True, help='Check whether PAGE-XML contains any Words and fail if not')
 @click.option('--check-border/--no-check-border', default=True, help='Check whether PAGE-XML contains Border or PrintSpace')

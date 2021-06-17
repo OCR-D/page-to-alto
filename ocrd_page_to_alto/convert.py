@@ -337,7 +337,8 @@ class OcrdPageAltoConverter():
                 set_alto_lang_from_page_lang(reg_alto, reg_page)
             self.textstyle_mgr.set_alto_styleref_from_textstyle(reg_alto, reg_page)
             self.parastyle_mgr.set_alto_styleref_from_textstyle(reg_alto, reg_page)
-            self.layouttag_mgr.set_alto_tag_from_type(reg_alto, reg_page)
+            if version.parse(self.alto_version) >= version.parse('2.1'):
+                self.layouttag_mgr.set_alto_tag_from_type(reg_alto, reg_page)
             if reg_page_type == 'Text':
                 self._convert_textlines(reg_alto, reg_page)
             elif reg_page_type == 'Table':

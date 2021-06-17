@@ -45,11 +45,22 @@ REGION_PAGE_TO_ALTO = {
 
 HYPHEN_CHARS = ['-', '⸗', '=']
 
+XSD_ALTO_URLS = {
+    '4.2': 'http://www.loc.gov/standards/alto/v4/alto-4-2.xsd',
+    '4.1': 'http://www.loc.gov/standards/alto/v4/alto-4-1.xsd',
+    '4.0': 'http://www.loc.gov/standards/alto/v4/alto-4-0.xsd',
+    '3.1': 'http://www.loc.gov/standards/alto/v3/alto-3-1.xsd',
+    '3.0': 'http://www.loc.gov/standards/alto/v3/alto-3-0.xsd',
+    '2.1': 'http://www.loc.gov/standards/alto/alto.xsd',
+    '2.0': 'http://www.loc.gov/standards/alto/v2/alto-2-0.xsd'
+}
+
 class OcrdPageAltoConverter():
 
     def __init__(
         self,
         *,
+        alto_version='4.2',
         check_words=True,
         check_border=True,
         skip_empty_lines=False,
@@ -65,6 +76,7 @@ class OcrdPageAltoConverter():
     ):
         """
         Keyword Args:
+            alto_version (string): Version of ALTO-XML schema to produce (older versions may not preserve all features)
             check_words (boolean): Whether to check if PAGE-XML contains any words before conversion and fail if not
             check_border (boolean): Whether to abort if neither Border nor PrintSpace is defined
             skip_empty_lines (boolean): Whether to omit empty lines completely (True) or create a placeholder empty String in ALTO (False)
@@ -76,6 +88,9 @@ class OcrdPageAltoConverter():
         """
         if not (page_filename or page_etree or pcgts):
             raise ValueError("Must pass either pcgts, page_etree or page_filename to constructor")
+        if not alto_version in XSD_ALTO_URLS:
+            raise ValueError("Converting to ALTO-XML v%s is not supported" % alto_version)
+        self.alto_version = alto_version
         self.skip_empty_lines = skip_empty_lines
         self.trailing_dash_to_hyp = trailing_dash_to_hyp
         self.dummy_textline = dummy_textline
@@ -126,7 +141,7 @@ class OcrdPageAltoConverter():
         alto_alto = ET.Element('alto')
         setxml(alto_alto, 'xmlns', NAMESPACES['alto'])
         setxml(alto_alto, '{%s}schemaLocation' % NAMESPACES['xsi'],
-               "%s http://www.loc.gov/standards/alto/v4/alto-4-2.xsd" % NAMESPACES['alto'])
+               "%s %s" % (NAMESPACES['alto'], XSD_ALTO_URLS[self.alto_version]))
         alto_description = ET.SubElement(alto_alto, 'Description')
         alto_styles = ET.SubElement(alto_alto, 'Styles')
         alto_tags = ET.SubElement(alto_alto, 'Tags')

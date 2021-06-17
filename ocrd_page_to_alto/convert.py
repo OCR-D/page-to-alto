@@ -121,7 +121,8 @@ class OcrdPageAltoConverter():
     def create_alto(self):
         alto_alto = ET.Element('alto')
         setxml(alto_alto, 'xmlns', NAMESPACES['alto'])
-        setxml(alto_alto, '{%s}schemaLocation' % NAMESPACES['xsi'], "http://www.loc.gov/standards/alto/v4/alto-4-2.xsd")
+        setxml(alto_alto, '{%s}schemaLocation' % NAMESPACES['xsi'],
+               "%s http://www.loc.gov/standards/alto/v4/alto-4-2.xsd" % NAMESPACES['alto'])
         alto_description = ET.SubElement(alto_alto, 'Description')
         alto_styles = ET.SubElement(alto_alto, 'Styles')
         alto_tags = ET.SubElement(alto_alto, 'Tags')

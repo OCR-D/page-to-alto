@@ -184,12 +184,12 @@ class OcrdPageAltoConverter():
         setxml(self.alto_page, 'WIDTH', page_width)
         setxml(self.alto_page, 'HEIGHT',  page_height)
         self.alto_page.set('WIDTH', str(page_width))
-        page_border = self.page_page.get_Border()
+        page_printspace = self.page_page.get_PrintSpace()
         dummy_printspace = False
-        if page_border is None:
-            self.logger.warning("PAGE-XML has no Border, trying to fall back to PrintSpace")
-            page_border = self.page_page.get_PrintSpace()
-            if page_border is None:
+        if page_printspace is None:
+            self.logger.warning("PAGE-XML has no PrintSpace, trying to fall back to Border")
+            page_printspace = self.page_page.get_Border()
+            if page_printspace is None:
                 dummy_printspace = True
 
         if dummy_printspace:
@@ -199,7 +199,7 @@ class OcrdPageAltoConverter():
                 for att in ('VPOS', 'HPOS', 'HEIGHT', 'WIDTH'):
                     setxml(margin, att, 0)
         else:
-            xywh = xywh_from_points(page_border.get_Coords().points)
+            xywh = xywh_from_points(page_printspace.get_Coords().points)
             alto_topmargin = ET.SubElement(self.alto_page, 'TopMargin')
             setxml(alto_topmargin, 'VPOS', 0)
             setxml(alto_topmargin, 'HPOS', 0)
@@ -220,12 +220,21 @@ class OcrdPageAltoConverter():
             setxml(alto_bottommargin, 'HPOS', 0)
             setxml(alto_bottommargin, 'HEIGHT', page_height - (xywh['y'] + xywh['h']))
             setxml(alto_bottommargin, 'WIDTH', page_width)
+            set_alto_xywh_from_coords(alto_printspace, page_printspace)
+            if version.parse(self.alto_version) >= version.parse('3.1'):
+                set_alto_shape_from_coords(alto_printspace, page_printspace)
 
         alto_printspace = ET.SubElement(self.alto_page, 'PrintSpace')
-        if page_border:
-            set_alto_xywh_from_coords(alto_printspace, page_border)
+        if dummy_printspace:
+            setxml(alto_printspace, 'VPOS', 0)
+            setxml(alto_printspace, 'HPOS', 0)
+            setxml(alto_printspace, 'HEIGHT', page_height)
+            setxml(alto_printspace, 'WIDTH', page_width)
+        else:
+            set_alto_xywh_from_coords(alto_printspace, page_printspace)
             if version.parse(self.alto_version) >= version.parse('3.1'):
-                set_alto_shape_from_coords(alto_printspace, page_border)
+                set_alto_shape_from_coords(alto_printspace, page_printspace)
+
         return alto_printspace
 
     def convert_metadata(self):

@@ -23,7 +23,7 @@ from .styles import TextStylesManager, ParagraphStyleManager, LayoutTagManager
 
 NAMESPACES = {**NAMESPACES_}
 NAMESPACES['xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
-NAMESPACES['alto'] = 'http://www.loc.gov/standards/alto/ns-v4#'
+NAMESPACES['alto'] = 'http://www.loc.gov/standards/alto/ns-v%s#'
 
 REGION_PAGE_TO_ALTO = {
     'Text': 'TextBlock',
@@ -139,9 +139,10 @@ class OcrdPageAltoConverter():
 
     def create_alto(self):
         alto_alto = ET.Element('alto')
-        setxml(alto_alto, 'xmlns', NAMESPACES['alto'])
+        setxml(alto_alto, 'xmlns', NAMESPACES['alto'] % self.alto_version[:1])
         setxml(alto_alto, '{%s}schemaLocation' % NAMESPACES['xsi'],
-               "%s %s" % (NAMESPACES['alto'], XSD_ALTO_URLS[self.alto_version]))
+               "%s %s" % (NAMESPACES['alto'] % self.alto_version[:1],
+                          XSD_ALTO_URLS[self.alto_version]))
         alto_description = ET.SubElement(alto_alto, 'Description')
         alto_styles = ET.SubElement(alto_alto, 'Styles')
         if version.parse(self.alto_version) >= version.parse('2.1'):

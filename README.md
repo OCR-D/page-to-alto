@@ -1,6 +1,6 @@
 # ocrd-page-to-alto
 
-> Convert PAGE (2019) to ALTO (4)
+> Convert PAGE (v. 2019) to ALTO (v. 2.0 - 4.2)
 
 [![image](https://circleci.com/gh/kba/page-to-alto.svg?style=svg)](https://circleci.com/gh/kba/page-to-alto)
 
@@ -31,3 +31,4 @@
 * [X] ~~xHeight~~ no equivalent in ALTO :(
 * [X] ~~letterSpaced~~ no equivalent in ALTO :(
 * [x] ProcessingStep
+* [x] differentiate/select ALTO versions

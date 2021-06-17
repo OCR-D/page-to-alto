@@ -102,7 +102,11 @@ class OcrdPageAltoConverter():
         self.layouttag_mgr = LayoutTagManager()
 
     def __str__(self):
-        return ET.tostring(self.alto_alto, pretty_print=True).decode('utf-8')
+        return ET.tostring(self.alto_alto,
+                           pretty_print=True,
+                           xml_declaration=True,
+                           standalone=True,
+                           encoding="UTF-8").decode('utf-8')
 
     def to_etree(self):
         return self.alto_alto

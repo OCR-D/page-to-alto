@@ -1,5 +1,6 @@
 # pylint: disable=no-member, c-extension-no-member
 from json import dumps
+from packaging import version
 
 from lxml import etree as ET
 from ocrd_models.ocrd_page import (
@@ -33,7 +34,6 @@ REGION_PAGE_TO_ALTO = {
     'Image': 'Illustration',
     "Table": 'ComposedBlock',
     # TODO how to handle these
-    "Chart": None,
     "Maths": None,
     "Chem": None,
     "Music": None,
@@ -88,7 +88,7 @@ class OcrdPageAltoConverter():
         """
         if not (page_filename or page_etree or pcgts):
             raise ValueError("Must pass either pcgts, page_etree or page_filename to constructor")
-        if not alto_version in XSD_ALTO_URLS:
+        if alto_version not in XSD_ALTO_URLS:
             raise ValueError("Converting to ALTO-XML v%s is not supported" % alto_version)
         self.alto_version = alto_version
         self.skip_empty_lines = skip_empty_lines
@@ -112,9 +112,9 @@ class OcrdPageAltoConverter():
         self.textequiv_fallback_strategy = textequiv_fallback_strategy
         self.alto_alto, self.alto_description, self.alto_styles, self.alto_tags, self.alto_page = self.create_alto()
         self.alto_printspace = self.convert_border()
-        self.textstyle_mgr = TextStylesManager()
-        self.parastyle_mgr = ParagraphStyleManager()
-        self.layouttag_mgr = LayoutTagManager()
+        self.textstyle_mgr = TextStylesManager(self.alto_version)
+        self.parastyle_mgr = ParagraphStyleManager(self.alto_version)
+        self.layouttag_mgr = LayoutTagManager(self.alto_version)
 
     def __str__(self):
         return ET.tostring(self.alto_alto,
@@ -144,8 +144,13 @@ class OcrdPageAltoConverter():
                "%s %s" % (NAMESPACES['alto'], XSD_ALTO_URLS[self.alto_version]))
         alto_description = ET.SubElement(alto_alto, 'Description')
         alto_styles = ET.SubElement(alto_alto, 'Styles')
-        alto_tags = ET.SubElement(alto_alto, 'Tags')
+        if version.parse(self.alto_version) >= version.parse('2.1'):
+            alto_tags = ET.SubElement(alto_alto, 'Tags')
+        else:
+            alto_tags = None
         alto_layout = ET.SubElement(alto_alto, 'Layout')
+        if version.parse(self.alto_version) >= version.parse('3.0'):
+            setxml(alto_alto, 'SCHEMAVERSION', self.alto_version)
         alto_page = ET.SubElement(alto_layout, 'Page')
         setxml(alto_page, 'ID', getattr(self.page_pcgts, 'pcGtsId', 'page0'))
         setxml(alto_page, 'PHYSICAL_IMG_NR', 0)
@@ -164,7 +169,8 @@ class OcrdPageAltoConverter():
     def convert_styles(self):
         self.textstyle_mgr.to_xml(self.alto_styles)
         self.parastyle_mgr.to_xml(self.alto_styles)
-        self.layouttag_mgr.to_xml(self.alto_tags)
+        if version.parse(self.alto_version) >= version.parse('2.1'):
+            self.layouttag_mgr.to_xml(self.alto_tags)
 
     def convert_reading_order(self):
         index_order = [x.id for x in self.page_page.get_AllRegions(order='reading-order', depth=0)]
@@ -217,7 +223,8 @@ class OcrdPageAltoConverter():
         alto_printspace = ET.SubElement(self.alto_page, 'PrintSpace')
         if page_border:
             set_alto_xywh_from_coords(alto_printspace, page_border)
-            set_alto_shape_from_coords(alto_printspace, page_border)
+            if version.parse(self.alto_version) >= version.parse('3.1'):
+                set_alto_shape_from_coords(alto_printspace, page_border)
         return alto_printspace
 
     def convert_metadata(self):
@@ -230,7 +237,11 @@ class OcrdPageAltoConverter():
         if not page_metadata:
             return
         for step_idx, step_page in enumerate([x for x in page_metadata.get_MetadataItem() if x.get_type() == 'processingStep']):
-            step_alto = ET.SubElement(self.alto_description, 'Processing')
+            if version.parse(self.alto_version) >= version.parse('4.0'):
+                step_alto = ET.SubElement(self.alto_description, 'Processing')
+            else:
+                step_alto = ET.SubElement(self.alto_description, 'OCRProcessing')
+                step_alto = ET.SubElement(step_alto, 'ocrProcessingStep')
             setxml(step_alto, 'ID', f'{step_page.value}-{step_idx}')
             step_alto_description = ET.SubElement(step_alto, 'processingStepDescription')
             step_alto_description.text = step_page.name
@@ -256,8 +267,10 @@ class OcrdPageAltoConverter():
             line_alto = ET.SubElement(reg_alto, 'TextLine')
             set_alto_id_from_page_id(line_alto, line_page)
             set_alto_xywh_from_coords(line_alto, line_page)
-            set_alto_shape_from_coords(line_alto, line_page)
-            set_alto_lang_from_page_lang(line_alto, line_page)
+            if version.parse(self.alto_version) >= version.parse('3.1'):
+                set_alto_shape_from_coords(line_alto, line_page)
+            if version.parse(self.alto_version) >= version.parse('2.1'):
+                set_alto_lang_from_page_lang(line_alto, line_page)
             self.textstyle_mgr.set_alto_styleref_from_textstyle(line_alto, line_page)
             if is_empty_line:
                 word_alto_empty = ET.SubElement(line_alto, 'String')
@@ -271,8 +284,10 @@ class OcrdPageAltoConverter():
                 word_alto = ET.SubElement(line_alto, 'String')
                 set_alto_id_from_page_id(word_alto, word_page)
                 set_alto_xywh_from_coords(word_alto, word_page)
-                set_alto_shape_from_coords(word_alto, word_page)
-                set_alto_lang_from_page_lang(word_alto, word_page)
+                if version.parse(self.alto_version) >= version.parse('3.1'):
+                    set_alto_shape_from_coords(word_alto, word_page)
+                if version.parse(self.alto_version) >= version.parse('2.1'):
+                    set_alto_lang_from_page_lang(word_alto, word_page)
                 self.textstyle_mgr.set_alto_styleref_from_textstyle(word_alto, word_page)
                 word_content = get_nth_textequiv(word_page, self.textequiv_index, self.textequiv_fallback_strategy)
                 if not is_last_word:
@@ -293,13 +308,17 @@ class OcrdPageAltoConverter():
             if parent_page.get_TextRegion():
                 reg_alto = ET.SubElement(parent_alto, 'ComposedBlock')
                 set_alto_id_from_page_id(reg_alto, parent_page) # TODO not unique!
-                set_alto_lang_from_page_lang(reg_alto, parent_page)
+                if version.parse(self.alto_version) >= version.parse('2.1'):
+                    set_alto_lang_from_page_lang(reg_alto, parent_page)
                 for reg_page in parent_page.get_TextRegion():
                     self._convert_table(reg_alto, reg_page, level=level + 1)
             else:
                 textblock_alto = ET.SubElement(parent_alto, 'TextBlock')
                 set_alto_id_from_page_id(textblock_alto, parent_page)
-                set_alto_lang_from_page_lang(textblock_alto, parent_page)
+                if version.parse(self.alto_version) >= version.parse('2.1'):
+                    set_alto_lang_from_page_lang(textblock_alto, parent_page)
+                else:
+                    set_alto_lang_from_page_lang(textblock_alto, parent_page, attribute_name="language")
                 self._convert_textlines(textblock_alto, parent_page)
 
     def convert_text(self):
@@ -311,8 +330,10 @@ class OcrdPageAltoConverter():
             reg_alto = ET.SubElement(self.alto_printspace, reg_alto_type)
             set_alto_id_from_page_id(reg_alto, reg_page)
             set_alto_xywh_from_coords(reg_alto, reg_page)
-            set_alto_shape_from_coords(reg_alto, reg_page)
-            set_alto_lang_from_page_lang(reg_alto, reg_page)
+            if version.parse(self.alto_version) >= version.parse('3.1'):
+                set_alto_shape_from_coords(reg_alto, reg_page)
+            if version.parse(self.alto_version) >= version.parse('2.1'):
+                set_alto_lang_from_page_lang(reg_alto, reg_page)
             self.textstyle_mgr.set_alto_styleref_from_textstyle(reg_alto, reg_page)
             self.parastyle_mgr.set_alto_styleref_from_textstyle(reg_alto, reg_page)
             self.layouttag_mgr.set_alto_tag_from_type(reg_alto, reg_page)

@@ -179,11 +179,10 @@ class OcrdPageAltoConverter():
             self.alto_printspace.find('.//*[@ID="%s"]' % id_cur).set('IDNEXT', id_next)
 
     def convert_border(self):
-        page_width = self.page_page.imageHeight
+        page_width = self.page_page.imageWidth
         page_height = self.page_page.imageHeight
         setxml(self.alto_page, 'WIDTH', page_width)
         setxml(self.alto_page, 'HEIGHT',  page_height)
-        self.alto_page.set('WIDTH', str(page_width))
         page_printspace = self.page_page.get_PrintSpace()
         dummy_printspace = False
         if page_printspace is None:

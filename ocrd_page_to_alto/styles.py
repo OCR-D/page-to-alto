@@ -68,8 +68,10 @@ class TextStylesManager():
             font_style.append('italics')
         if textstyle.underlined:
             font_style.append('underline')
-        for att in ('bold', 'smallCaps', 'strikethrough' if version.parse(self.alto_version) >= version.parse('4.2') else '',
-                    'subscript', 'superscript'):
+        possible_atts = ['bold', 'smallCaps', 'subscript', 'superscript']
+        if version.parse(self.alto_version) >= version.parse('4.2'):
+            possible_atts.append('strikethrough')
+        for att in possible_atts:
             if getattr(textstyle, att):
                 font_style.append(att.lower())
         if font_style:

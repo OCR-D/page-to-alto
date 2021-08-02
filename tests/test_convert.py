@@ -1,8 +1,10 @@
 from pytest import raises, main, fixture
 from lxml import etree as ET
 
-from ocrd_page_to_alto.convert import OcrdPageAltoConverter, NAMESPACES
+from ocrd_page_to_alto.convert import OcrdPageAltoConverter, NAMESPACES as _NAMESPACES
 from ocrd_utils import initLogging
+
+NAMESPACES = {**_NAMESPACES, 'alto': _NAMESPACES['alto'] % '4'}
 
 from tests.assets import Assets
 
@@ -18,7 +20,7 @@ def test_empty_init_kwargs():
 
 def test_create_alto():
     c = OcrdPageAltoConverter(page_filename='tests/assets/kant_aufklaerung_1784/data/OCR-D-GT-PAGE/PAGE_0017_PAGE.xml')
-    assert str(c).split('\n')[0] == '<alto xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/standards/alto/ns-v4#" xsi:schemaLocation="http://www.loc.gov/standards/alto/v4/alto-4-2.xsd">'
+    assert str(c).split('\n')[1] == '<alto xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/standards/alto/ns-v4#" xsi:schemaLocation="http://www.loc.gov/standards/alto/ns-v4# http://www.loc.gov/standards/alto/v4/alto-4-2.xsd" SCHEMAVERSION="4.2">'
 
 def test_convert1():
     c = OcrdPageAltoConverter(page_filename='tests/assets/kant_aufklaerung_1784/data/OCR-D-GT-PAGE/PAGE_0017_PAGE.xml')
@@ -56,10 +58,11 @@ def test_convert_processingstep():
 
 def test_layouttag():
     c = OcrdPageAltoConverter(page_filename='tests/data/layouttag.page.xml').convert()
+    print(str(c))
     tree = ET.fromstring(str(c).encode('utf-8'))
     assert [x.get('LABEL') for x in tree.xpath('//alto:Tags/alto:LayoutTag', namespaces=NAMESPACES)] == ['paragraph']
-    assert len(tree.xpath('//*[@TYPE="paragraph"]')) == 1
-    assert len(tree.xpath('//*[@TYPE="catch-word"]')) == 0 # @TYPE only allowed for BlockType
+    assert len(tree.xpath('//*[@LABEL="paragraph"]')) == 1
+    assert len(tree.xpath('//*[@LABEL="catch-word"]')) == 0 # @TYPE only allowed for BlockType
 
 def test_pararaphstyle():
     c = OcrdPageAltoConverter(page_filename='tests/data/align.page.xml').convert()

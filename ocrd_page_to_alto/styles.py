@@ -1,4 +1,5 @@
 from lxml import etree as ET
+from packaging import version
 
 class TextStylesManager():
     """
@@ -6,7 +7,8 @@ class TextStylesManager():
     to ALTO TextStyles. The @ID is a concatenation of the values with a prefix.
     """
 
-    def __init__(self):
+    def __init__(self, alto_version):
+        self.alto_version = alto_version
         self._elements = set()
         self.prefix = 'textstyle-'
         self.fields = ['font_family', 'font_type', 'font_width', 'font_size', 'font_color', 'font_style']
@@ -66,7 +68,8 @@ class TextStylesManager():
             font_style.append('italics')
         if textstyle.underlined:
             font_style.append('underline')
-        for att in ('bold', 'smallCaps', 'strikethrough', 'subscript', 'superscript'):
+        for att in ('bold', 'smallCaps', 'strikethrough' if version.parse(self.alto_version) >= version.parse('4.2') else '',
+                    'subscript', 'superscript'):
             if getattr(textstyle, att):
                 font_style.append(att.lower())
         if font_style:
@@ -97,8 +100,8 @@ class TextStylesManager():
 
 class ParagraphStyleManager(TextStylesManager):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, alto_version):
+        super().__init__(alto_version)
         self.fields = ['align', 'left', 'right', 'line_space', 'first_line']
         self.prefix = 'parastyle-'
         self.output_element = 'ParagraphStyle'
@@ -113,8 +116,8 @@ class ParagraphStyleManager(TextStylesManager):
 
 class LayoutTagManager(TextStylesManager):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, alto_version):
+        super().__init__(alto_version)
         self.fields = ['label']
         self.prefix = 'layouttag-'
         self.output_element = 'LayoutTag'

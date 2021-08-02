@@ -22,12 +22,12 @@ def set_alto_shape_from_coords(reg_alto, reg_page):
 def set_alto_id_from_page_id(reg_alto, reg_page):
     setxml(reg_alto, 'ID', reg_page.id)
 
-def set_alto_lang_from_page_lang(reg_alto, reg_page):
+def set_alto_lang_from_page_lang(reg_alto, reg_page, attribute_name='LANG'):
     for prefix in ('primaryL', 'secondaryL', 'l'):
         lang_page = getattr(reg_page, f'{prefix}anguage', None)
         if lang_page:
             lang_alto = langcodes.find(lang_page).to_alpha3()
-            setxml(reg_alto, 'LANG',lang_alto)
+            setxml(reg_alto, attribute_name, lang_alto)
             return
 
 def get_nth_textequiv(reg_page, textequiv_index, textequiv_fallback_strategy):

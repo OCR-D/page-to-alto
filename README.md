@@ -16,6 +16,8 @@ to display the results, i.e. in libraries.
 In a Python virtualenv:
 ```
 make install     # or pip install .
+# or to install from PyPI
+pip install ocrd_page_to_alto
 ```
 
 ## Usage

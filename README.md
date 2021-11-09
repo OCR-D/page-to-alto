@@ -26,7 +26,8 @@ page-to-alto example.xml > example.alto.xml
 ```
 
 To process an OCR-D workspace, use
-[ocrd_fileformat](https://github.com/OCR-D/ocrd_fileformat):
+[ocrd_fileformat](https://github.com/OCR-D/ocrd_fileformat), which uses
+page-to-alto by default:
 ```
 ocrd-fileformat-transform -I OCRD-OCR-OUTPUT-PAGE -O OCRD-OCR-OUTPUT-ALTO
 ```

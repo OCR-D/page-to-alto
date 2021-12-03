@@ -230,10 +230,6 @@ class OcrdPageAltoConverter():
             setxml(alto_printspace, 'HPOS', 0)
             setxml(alto_printspace, 'HEIGHT', page_height)
             setxml(alto_printspace, 'WIDTH', page_width)
-        else:
-            set_alto_xywh_from_coords(alto_printspace, page_printspace)
-            if version.parse(self.alto_version) >= version.parse('3.1'):
-                set_alto_shape_from_coords(alto_printspace, page_printspace)
 
         return alto_printspace
 

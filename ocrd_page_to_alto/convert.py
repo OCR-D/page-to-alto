@@ -352,10 +352,6 @@ class OcrdPageAltoConverter():
                 self._convert_textlines(reg_alto, reg_page)
             elif reg_page_type == 'Table':
                 self._convert_table(reg_alto, reg_page)
-            elif reg_page_type in ('Image', 'Separator'):
-                pass # nothing more to do
-            else:
-                raise ValueError('Unhandled region type %s' % reg_page_type)
 
     def _set_dummy_x_for_y(self, el, parent_level):
         child_level = 'Word' if parent_level == 'TextLine' else 'TextLine'

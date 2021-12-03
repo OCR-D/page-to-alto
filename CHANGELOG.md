@@ -8,6 +8,7 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 Added:
 
   * Add `¬` as a potential hyphenation character, #24
+  * Add "&shy;" (soft hyphen) as a potential hyphenation character, #26
 
 Fixed:
 

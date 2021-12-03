@@ -43,7 +43,7 @@ REGION_PAGE_TO_ALTO = {
     "Custom": None,
 }
 
-HYPHEN_CHARS = ['-', '⸗', '=']
+HYPHEN_CHARS = ['-', '⸗', '=', '¬']
 
 XSD_ALTO_URLS = {
     '4.2': 'http://www.loc.gov/standards/alto/v4/alto-4-2.xsd',
@@ -80,7 +80,7 @@ class OcrdPageAltoConverter():
             check_words (boolean): Whether to check if PAGE-XML contains any words before conversion and fail if not
             check_border (boolean): Whether to abort if neither Border nor PrintSpace is defined
             skip_empty_lines (boolean): Whether to omit empty lines completely (True) or create a placeholder empty String in ALTO (False)
-            trailing_dash_to_hyp (boolean): Whether to add a <HYP/> element if the last word in a line ends in ``-``
+            trailing_dash_to_hyp (boolean): Whether to add a <HYP/> element if the last word in a line ends in ``-`` etc
             textequiv_index (int): @index of the TextEquiv to choose
             textequiv_fallback_strategy ("raise"|"first"|"last"): Strategy to handle case of no matchin TextEquiv by textequiv_index
             dummy_textline (boolean): Whether to create a TextLine for regions that have TextEquiv/Unicode but no TextLine

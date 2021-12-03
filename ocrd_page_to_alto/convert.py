@@ -191,7 +191,6 @@ class OcrdPageAltoConverter():
             if page_printspace is None:
                 dummy_printspace = True
 
-        alto_printspace = ET.SubElement(self.alto_page, 'PrintSpace')
         if dummy_printspace:
             self.logger.warning("PAGE-XML has neither Border nor PrintSpace")
             for pos in ('Top', 'Left', 'Right', 'Bottom'):
@@ -220,11 +219,13 @@ class OcrdPageAltoConverter():
             setxml(alto_bottommargin, 'HPOS', 0)
             setxml(alto_bottommargin, 'HEIGHT', page_height - (xywh['y'] + xywh['h']))
             setxml(alto_bottommargin, 'WIDTH', page_width)
+            alto_printspace = ET.SubElement(self.alto_page, 'PrintSpace')
             set_alto_xywh_from_coords(alto_printspace, page_printspace)
             if version.parse(self.alto_version) >= version.parse('3.1'):
                 set_alto_shape_from_coords(alto_printspace, page_printspace)
 
         if dummy_printspace:
+            alto_printspace = ET.SubElement(self.alto_page, 'PrintSpace')
             setxml(alto_printspace, 'VPOS', 0)
             setxml(alto_printspace, 'HPOS', 0)
             setxml(alto_printspace, 'HEIGHT', page_height)

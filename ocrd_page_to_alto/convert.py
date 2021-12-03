@@ -43,7 +43,7 @@ REGION_PAGE_TO_ALTO = {
     "Custom": None,
 }
 
-HYPHEN_CHARS = ['-', '⸗', '=', '¬']
+HYPHEN_CHARS = ['-', '⸗', '=', '¬', '­']
 
 XSD_ALTO_URLS = {
     '4.2': 'http://www.loc.gov/standards/alto/v4/alto-4-2.xsd',

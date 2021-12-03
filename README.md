@@ -4,6 +4,37 @@
 
 [![image](https://circleci.com/gh/kba/page-to-alto.svg?style=svg)](https://circleci.com/gh/kba/page-to-alto)
 
+
+## Introduction
+
+This software converts PAGE XML files to the ALTO XML OCR result format. It
+enables using PAGE XML generating software in a context where ALTO is needed
+to display the results, i.e. in libraries.
+
+## Installation
+
+In a Python virtualenv:
+```
+make install     # or pip install .
+# or to install from PyPI
+pip install ocrd_page_to_alto
+```
+
+## Usage
+
+To convert the PAGE XML document `example.xml` to ALTO:
+```
+page-to-alto example.xml > example.alto.xml
+```
+
+To process an OCR-D workspace, use
+[ocrd_fileformat](https://github.com/OCR-D/ocrd_fileformat), which uses
+page-to-alto by default:
+```
+ocrd-fileformat-transform -I OCRD-OCR-OUTPUT-PAGE -O OCRD-OCR-OUTPUT-ALTO
+```
+
+
 ## TODO
 
 * [ ] AlternativeImage

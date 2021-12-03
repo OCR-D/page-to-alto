@@ -5,6 +5,14 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Added:
+
+  * Add `¬` as a potential hyphenation character, #24
+
+Fixed:
+
+  * Create `alto:Printspace` after `alto:*Margin`, #22, #23
+
 ## [1.0.1] - 2021-11-09
 
 Fixed:

@@ -174,7 +174,7 @@ class OcrdPageAltoConverter():
             self.layouttag_mgr.to_xml(self.alto_tags)
 
     def convert_reading_order(self):
-        index_order = [x.id for x in self.page_page.get_AllRegions(order='reading-order', depth=0)]
+        index_order = [x.id for x in self.page_page.get_AllRegions(order='reading-order-only', depth=0)]
         for id_cur, id_next in zip(index_order[:-1], index_order[1:]):
             self.alto_printspace.find('.//*[@ID="%s"]' % id_cur).set('IDNEXT', id_next)
 

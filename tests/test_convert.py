@@ -92,5 +92,13 @@ def test_hyp():
     tree = ET.fromstring(str(c).encode('utf-8'))
     assert tree.xpath('//alto:HYP', namespaces=NAMESPACES)
 
+def test_reading_order():
+    c = OcrdPageAltoConverter(page_filename='tests/data/FILE_0010_OCR-D-OCR-CALAMARI.xml').convert()
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    assert tree.xpath('//alto:TextBlock[1]', namespaces=NAMESPACES)[0].get('ID') == 'region_0003'
+    assert tree.xpath('//alto:TextBlock[last()]/alto:TextLine/alto:String', namespaces=NAMESPACES)[0].get('CONTENT') == 'wird'
+
+
+
 if __name__ == "__main__":
     main([__file__])

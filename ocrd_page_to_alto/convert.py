@@ -328,7 +328,7 @@ class OcrdPageAltoConverter():
                 self._convert_textlines(textblock_alto, parent_page)
 
     def convert_text(self):
-        for reg_page in self.page_page.get_AllRegions(depth=0):
+        for reg_page in self.page_page.get_AllRegions(depth=0, order='reading-order'):
             reg_page_type = reg_page.__class__.__name__[0:-10] # len('RegionType') == 10
             reg_alto_type = REGION_PAGE_TO_ALTO[reg_page_type]
             if not reg_alto_type:

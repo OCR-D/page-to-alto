@@ -67,6 +67,7 @@ class OcrdPageAltoConverter():
         trailing_dash_to_hyp=False,
         textequiv_index=0,
         textequiv_fallback_strategy='last',
+        region_order='document',
         page_filename=None,
         dummy_textline=True,
         dummy_word=True,
@@ -83,6 +84,7 @@ class OcrdPageAltoConverter():
             trailing_dash_to_hyp (boolean): Whether to add a <HYP/> element if the last word in a line ends in ``-`` etc
             textequiv_index (int): @index of the TextEquiv to choose
             textequiv_fallback_strategy ("raise"|"first"|"last"): Strategy to handle case of no matchin TextEquiv by textequiv_index
+            region_order ("document"|"reading-order"|"reading-order-only"): The order in which to iterate over regions.
             dummy_textline (boolean): Whether to create a TextLine for regions that have TextEquiv/Unicode but no TextLine
             dummy_word (boolean): Whether to create a Word for TextLine that have TextEquiv/Unicode but no Word
         """
@@ -94,6 +96,7 @@ class OcrdPageAltoConverter():
         self.skip_empty_lines = skip_empty_lines
         self.trailing_dash_to_hyp = trailing_dash_to_hyp
         self.dummy_textline = dummy_textline
+        self.region_order = region_order
         self.dummy_word = dummy_word
         self.logger = logger if logger else getLogger('page-to-alto')
         if pcgts:
@@ -328,7 +331,7 @@ class OcrdPageAltoConverter():
                 self._convert_textlines(textblock_alto, parent_page)
 
     def convert_text(self):
-        for reg_page in self.page_page.get_AllRegions(depth=0, order='reading-order'):
+        for reg_page in self.page_page.get_AllRegions(depth=0, order=self.region_order):
             reg_page_type = reg_page.__class__.__name__[0:-10] # len('RegionType') == 10
             reg_alto_type = REGION_PAGE_TO_ALTO[reg_page_type]
             if not reg_alto_type:

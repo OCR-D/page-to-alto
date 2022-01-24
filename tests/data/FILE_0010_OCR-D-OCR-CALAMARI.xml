@@ -46,7 +46,8 @@
         <pc:ReadingOrder>
             <pc:OrderedGroup id="ro357564684568544579089">
                 <pc:RegionRefIndexed index="0" regionRef="region_0003"/>
-                <pc:RegionRefIndexed index="1" regionRef="region_0002"/>
+                <!-- deliberately removed to test reading-order-only -->
+                <!--<pc:RegionRefIndexed index="1" regionRef="region_0002"/>-->
                 <pc:RegionRefIndexed index="2" regionRef="region_0001"/>
             </pc:OrderedGroup>
         </pc:ReadingOrder>

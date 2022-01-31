@@ -186,10 +186,10 @@ class OcrdPageAltoConverter():
         setxml(self.alto_page, 'HEIGHT',  page_height)
         page_border = self.page_page.get_Border()
         page_pspace = self.page_page.get_PrintSpace()
-        if page_pspace is None and not page_border is None:
+        if page_pspace is None and page_border is not None:
             self.logger.warning("PAGE-XML has Border but no PrintSpace - Margins will be empty")
             page_pspace = page_border
-        elif page_border is None and not page_pspace is None:
+        elif page_border is None and page_pspace is not None:
             self.logger.warning("PAGE-XML has PrintSpace but no Border - Margins will be empty")
             page_border = page_pspace
         elif page_border is None and page_pspace is None:
@@ -205,7 +205,7 @@ class OcrdPageAltoConverter():
         set_alto_xywh_from_coords(alto_pspace, page_pspace)
         set_alto_shape_from_coords(alto_pspace, page_pspace)
 
-        if not page_border is page_pspace:
+        if page_border is not page_pspace:
             bmin_x, bmin_y, bmax_x, bmax_y = bbox_from_points(page_border.get_Coords().points)
             pmin_x, pmin_y, pmax_x, pmax_y = bbox_from_points(page_pspace.get_Coords().points)
             # 

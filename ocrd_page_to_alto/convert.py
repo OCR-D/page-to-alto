@@ -18,6 +18,7 @@ from .utils import (
     set_alto_shape_from_coords,
     set_alto_xywh_from_coords,
     setxml,
+    contains,
     get_nth_textequiv)
 from .styles import TextStylesManager, ParagraphStyleManager, LayoutTagManager
 
@@ -338,7 +339,23 @@ class OcrdPageAltoConverter():
             reg_alto_type = REGION_PAGE_TO_ALTO[reg_page_type]
             if not reg_alto_type:
                 raise ValueError("Cannot handle PAGE-XML %sRegion" % reg_page_type)
-            reg_alto = ET.SubElement(self.alto_printspace, reg_alto_type)
+            # determine if the region belongs to PrintSpace or to any of the Margins
+            reg_bbox = bbox_from_points(reg_page.get_Coords().points)
+            if contains(self.alto_printspace, reg_bbox):
+                parent = self.alto_printspace
+            else:
+                parent = None
+                for margin in ['LeftMargin', 'RightMargin', 'TopMargin', 'BottomMargin']:
+                    if not hasattr(self.alto_page, margin):
+                        continue
+                    margin = getattr(self.alto_page, margin)
+                    if contains(margin, reg_bbox):
+                        parent = margin
+                        break # pick first match only
+                if not parent:
+                    parent = self.alto_printspace
+                    self.logger.warning("region '%s' not properly contained in PrintSpace or Margins", reg_page.id)
+            reg_alto = ET.SubElement(parent, reg_alto_type)
             set_alto_id_from_page_id(reg_alto, reg_page)
             set_alto_xywh_from_coords(reg_alto, reg_page)
             if version.parse(self.alto_version) >= version.parse('3.1'):

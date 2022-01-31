@@ -10,7 +10,7 @@ from ocrd_models.ocrd_page import (
     parseString,
     to_xml)
 from ocrd_models.constants import NAMESPACES as NAMESPACES_
-from ocrd_utils import getLogger, xywh_from_points
+from ocrd_utils import getLogger, bbox_from_points
 
 from .utils import (
     set_alto_id_from_page_id,
@@ -183,55 +183,60 @@ class OcrdPageAltoConverter():
         page_height = self.page_page.imageHeight
         setxml(self.alto_page, 'WIDTH', page_width)
         setxml(self.alto_page, 'HEIGHT',  page_height)
-        page_printspace = self.page_page.get_PrintSpace()
-        dummy_printspace = False
-        if page_printspace is None:
-            self.logger.warning("PAGE-XML has no PrintSpace, trying to fall back to Border")
-            page_printspace = self.page_page.get_Border()
-            if page_printspace is None:
-                dummy_printspace = True
+        page_border = self.page_page.get_Border()
+        page_pspace = self.page_page.get_PrintSpace()
+        if page_pspace is None and not page_border is None:
+            self.logger.warning("PAGE-XML has Border but no PrintSpace - Margins will be empty")
+            page_pspace = page_border
+        elif page_border is None and not page_pspace is None:
+            self.logger.warning("PAGE-XML has PrintSpace but no Border - Margins will be empty")
+            page_border = page_pspace
+        elif page_border is None and page_pspace is None:
+            self.logger.warning("PAGE-XML has neither Border nor PrintSpace - PrintSpace will fill the image")
+            alto_pspace = ET.SubElement(self.alto_page, 'PrintSpace')
+            setxml(alto_pspace, 'VPOS', 0)
+            setxml(alto_pspace, 'HPOS', 0)
+            setxml(alto_pspace, 'HEIGHT', page_height)
+            setxml(alto_pspace, 'WIDTH', page_width)
+            return alto_pspace
 
-        if dummy_printspace:
-            self.logger.warning("PAGE-XML has neither Border nor PrintSpace")
-            for pos in ('Top', 'Left', 'Right', 'Bottom'):
-                margin = ET.SubElement(self.alto_page, '%sMargin' % pos)
-                for att in ('VPOS', 'HPOS', 'HEIGHT', 'WIDTH'):
-                    setxml(margin, att, 0)
-        else:
-            xywh = xywh_from_points(page_printspace.get_Coords().points)
+        alto_pspace = ET.SubElement(self.alto_page, 'PrintSpace')
+        set_alto_xywh_from_coords(alto_pspace, page_pspace)
+        set_alto_shape_from_coords(alto_pspace, page_pspace)
+
+        if not page_border is page_pspace:
+            bmin_x, bmin_y, bmax_x, bmax_y = bbox_from_points(page_border.get_Coords().points)
+            pmin_x, pmin_y, pmax_x, pmax_y = bbox_from_points(page_pspace.get_Coords().points)
+            # 
+            #  ╔═══════╗   ╔═══════╗   ╔╗   ╔══╗
+            #  ║┌───┐  ║   ╚═══════╝   ║║   ║  ║              ┌───┐
+            #  ║│   │  ║ →           + ║║   ║  ║ (margins) +  │   │ (pspace)
+            #  ║└───┘  ║   ╔═══════╗   ║║   ║  ║              └───┘
+            #  ║       ║   ║       ║   ║║   ║  ║
+            #  ╚═══════╝   ╚═══════╝   ╚╝   ╚══╝
+            #
             alto_topmargin = ET.SubElement(self.alto_page, 'TopMargin')
-            setxml(alto_topmargin, 'VPOS', 0)
-            setxml(alto_topmargin, 'HPOS', 0)
-            setxml(alto_topmargin, 'HEIGHT', xywh['x'])
-            setxml(alto_topmargin, 'WIDTH', page_width)
+            setxml(alto_topmargin, 'VPOS', bmin_y)
+            setxml(alto_topmargin, 'HPOS', bmin_x)
+            setxml(alto_topmargin, 'HEIGHT', pmin_y - bmin_y)
+            setxml(alto_topmargin, 'WIDTH', bmax_x - bmin_x)
             alto_leftmargin = ET.SubElement(self.alto_page, 'LeftMargin')
-            setxml(alto_leftmargin, 'VPOS', 0)
-            setxml(alto_leftmargin, 'HPOS', 0)
-            setxml(alto_leftmargin, 'HEIGHT', page_height)
-            setxml(alto_leftmargin, 'WIDTH', xywh['x'])
+            setxml(alto_leftmargin, 'VPOS', bmin_y)
+            setxml(alto_leftmargin, 'HPOS', bmin_x)
+            setxml(alto_leftmargin, 'HEIGHT', bmax_y - bmin_y)
+            setxml(alto_leftmargin, 'WIDTH', pmin_x - bmin_x)
             alto_rightmargin = ET.SubElement(self.alto_page, 'RightMargin')
-            setxml(alto_rightmargin, 'VPOS', 0)
-            setxml(alto_rightmargin, 'HPOS', xywh['x'] + xywh['w'])
-            setxml(alto_rightmargin, 'HEIGHT', page_height)
-            setxml(alto_rightmargin, 'WIDTH', page_width - (xywh['x'] + xywh['w']))
+            setxml(alto_rightmargin, 'VPOS', bmin_y)
+            setxml(alto_rightmargin, 'HPOS', pmax_x)
+            setxml(alto_rightmargin, 'HEIGHT', bmax_y - bmin_y)
+            setxml(alto_rightmargin, 'WIDTH', bmax_x - pmax_x)
             alto_bottommargin = ET.SubElement(self.alto_page, 'BottomMargin')
-            setxml(alto_bottommargin, 'VPOS', xywh['y'] + xywh['h'])
-            setxml(alto_bottommargin, 'HPOS', 0)
-            setxml(alto_bottommargin, 'HEIGHT', page_height - (xywh['y'] + xywh['h']))
-            setxml(alto_bottommargin, 'WIDTH', page_width)
-            alto_printspace = ET.SubElement(self.alto_page, 'PrintSpace')
-            set_alto_xywh_from_coords(alto_printspace, page_printspace)
-            if version.parse(self.alto_version) >= version.parse('3.1'):
-                set_alto_shape_from_coords(alto_printspace, page_printspace)
+            setxml(alto_bottommargin, 'VPOS', pmax_y)
+            setxml(alto_bottommargin, 'HPOS', bmin_x)
+            setxml(alto_bottommargin, 'HEIGHT', bmax_y - pmax_y)
+            setxml(alto_bottommargin, 'WIDTH', bmax_x - bmin_x)
 
-        if dummy_printspace:
-            alto_printspace = ET.SubElement(self.alto_page, 'PrintSpace')
-            setxml(alto_printspace, 'VPOS', 0)
-            setxml(alto_printspace, 'HPOS', 0)
-            setxml(alto_printspace, 'HEIGHT', page_height)
-            setxml(alto_printspace, 'WIDTH', page_width)
-
-        return alto_printspace
+        return alto_pspace
 
     def convert_metadata(self):
         alto_measurementunit = ET.SubElement(self.alto_description, 'MeasurementUnit')

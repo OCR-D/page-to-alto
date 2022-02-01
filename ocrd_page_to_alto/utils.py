@@ -49,3 +49,18 @@ def get_nth_textequiv(reg_page, textequiv_index, textequiv_fallback_strategy):
     else:
         return textequivs[textequiv_index].Unicode
 
+def contains(el, bbox):
+    minx1, miny1, maxx1, maxy1 = bbox
+    minx2 = int(el.get('HPOS'))
+    miny2 = int(el.get('VPOS'))
+    maxx2 = minx2 + int(el.get('WIDTH'))
+    maxy2 = miny2 + int(el.get('HEIGHT'))
+    if minx1 < minx2:
+        return False
+    if maxx1 > maxx2:
+        return False
+    if miny1 < miny2:
+        return False
+    if maxy1 > maxy2:
+        return False
+    return True

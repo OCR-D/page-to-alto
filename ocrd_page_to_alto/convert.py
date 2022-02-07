@@ -69,6 +69,7 @@ class OcrdPageAltoConverter():
         textequiv_index=0,
         textequiv_fallback_strategy='last',
         region_order='document',
+        textline_order='document',
         page_filename=None,
         dummy_textline=True,
         dummy_word=True,
@@ -86,6 +87,7 @@ class OcrdPageAltoConverter():
             textequiv_index (int): @index of the TextEquiv to choose
             textequiv_fallback_strategy ("raise"|"first"|"last"): Strategy to handle case of no matchin TextEquiv by textequiv_index
             region_order ("document"|"reading-order"|"reading-order-only"): The order in which to iterate over regions.
+            textline_order ("document"|"index"|"textline-order"): The order in which to iterate over textlines.
             dummy_textline (boolean): Whether to create a TextLine for regions that have TextEquiv/Unicode but no TextLine
             dummy_word (boolean): Whether to create a Word for TextLine that have TextEquiv/Unicode but no Word
         """
@@ -98,6 +100,7 @@ class OcrdPageAltoConverter():
         self.trailing_dash_to_hyp = trailing_dash_to_hyp
         self.dummy_textline = dummy_textline
         self.region_order = region_order
+        self.textline_order = textline_order
         self.dummy_word = dummy_word
         self.logger = logger if logger else getLogger('page-to-alto')
         if pcgts:
@@ -274,7 +277,19 @@ class OcrdPageAltoConverter():
     def _convert_textlines(self, reg_alto, reg_page):
         if self.dummy_textline:
             self.set_dummy_line_for_region(reg_page)
-        for line_page in reg_page.get_TextLine():
+        lines = reg_page.get_TextLine()
+        if self.textline_order == 'document':
+            :
+        elif self.textline_order == 'index':
+            def by_index(line):
+                if line.index is None:
+                    return 0 # keep order
+                return line.index
+            lines = sorted(lines, key=by_index)
+        elif self.textline_order == 'textline-order':
+            # something with reg_page.textLineOrder or reg_page.get_parent_.textLineOrder
+            raise Exception("@textLineOrder semantics not implemented; cf. PRImA-Research-Lab/PAGE-XML#26")
+        for line_page in lines:
             is_empty_line = not(line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode()) and not(line_page.get_Word())
             if is_empty_line and self.skip_empty_lines:
                 self.logger.debug("Skipping empty line '%s'", line_page.id)

@@ -279,7 +279,7 @@ class OcrdPageAltoConverter():
             self.set_dummy_line_for_region(reg_page)
         lines = reg_page.get_TextLine()
         if self.textline_order == 'document':
-            :
+            pass
         elif self.textline_order == 'index':
             def by_index(line):
                 if line.index is None:

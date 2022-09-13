@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Added:
+
+  * `--textline-order` option to allow iterating `pc:TextLine` in document or `@index` order, #2, #29
+
 ## [1.1.0] - 2022-02-01
 
 Added:

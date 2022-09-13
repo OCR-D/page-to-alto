@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [1.2.0] - 2022-09-13
+
 Changed:
 
   * `--textequiv-fallback-strategy`: default to `first`, not `last`, #32
@@ -38,6 +40,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[1.2.0]: ../../compare/v1.2.0...v1.1.0
 [1.1.0]: ../../compare/v1.1.0...v1.0.1
 [1.0.1]: ../../compare/v1.0.1...v1.0.0
 [1.0.0]: ../../compare/HEAD...v1.0.0

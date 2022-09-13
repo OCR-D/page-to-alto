@@ -38,16 +38,16 @@ def get_nth_textequiv(reg_page, textequiv_index, textequiv_fallback_strategy):
         if textequiv_fallback_strategy == 'raise':
             raise ValueError("PAGE element '%s' has no TextEquivs and fallback strategy is to raise" % reg_page.id)
         return ''
-    if len(textequivs) < textequiv_index + 1:
-        if textequiv_fallback_strategy == 'raise':
-            raise ValueError("PAGE element '%s' has only %d TextEquiv elements so cannot choose the %s%s and fallback strategy is to raise" % (
-                reg_page.id, len(textequivs), textequiv_index + 1, 'st' if textequiv_index == 0 else 'nd'))
-        elif textequiv_fallback_strategy == 'first':
-            return textequivs[0].Unicode
-        else:
-            return textequivs[-1].Unicode
+    for textequiv in textequivs:
+        if textequiv.get_index() == textequiv_index:
+            return textequiv.Unicode
+    if textequiv_fallback_strategy == 'raise':
+        raise ValueError("PAGE element '%s' has no TextEquiv index %d" % (
+            reg_page.id, textequiv_index))
+    elif textequiv_fallback_strategy == 'first':
+        return textequivs[0].Unicode
     else:
-        return textequivs[textequiv_index].Unicode
+        return textequivs[-1].Unicode
 
 def contains(el, bbox):
     minx1, miny1, maxx1, maxy1 = bbox

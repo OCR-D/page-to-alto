@@ -5,6 +5,11 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Changed:
+
+  * `--textequiv-fallback-strategy`: default to `first`, not `last`, #32
+  * `--textequiv-index` now properly respected, #31, #32
+
 Added:
 
   * `--textline-order` option to allow iterating `pc:TextLine` in document or `@index` order, #2, #29

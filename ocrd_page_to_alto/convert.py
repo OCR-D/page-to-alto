@@ -70,6 +70,7 @@ class OcrdPageAltoConverter():
         textequiv_fallback_strategy='last',
         region_order='document',
         textline_order='document',
+        timestamp_src='LastChange',
         page_filename=None,
         dummy_textline=True,
         dummy_word=True,
@@ -88,6 +89,7 @@ class OcrdPageAltoConverter():
             textequiv_fallback_strategy ("raise"|"first"|"last"): Strategy to handle case of no matchin TextEquiv by textequiv_index
             region_order ("document"|"reading-order"|"reading-order-only"): The order in which to iterate over regions.
             textline_order ("document"|"index"|"textline-order"): The order in which to iterate over textlines.
+            timestamp_src ("Created"|"LastChange"|"none"): The element to use for the processingDateTime
             dummy_textline (boolean): Whether to create a TextLine for regions that have TextEquiv/Unicode but no TextLine
             dummy_word (boolean): Whether to create a Word for TextLine that have TextEquiv/Unicode but no Word
         """
@@ -115,6 +117,7 @@ class OcrdPageAltoConverter():
         if check_border:
             tree = ET.fromstring(to_xml(self.page_pcgts).encode('utf-8'))
             self.check_border(tree)
+        self.timestamp_src = None if timestamp_src == 'none' else timestamp_src
         self.textequiv_index = textequiv_index
         self.textequiv_fallback_strategy = textequiv_fallback_strategy
         self.alto_alto, self.alto_description, self.alto_styles, self.alto_tags, self.alto_page = self.create_alto()
@@ -254,6 +257,10 @@ class OcrdPageAltoConverter():
         page_metadata = self.page_pcgts.get_Metadata()
         if not page_metadata:
             return
+        if self.timestamp_src:
+            page_timestamp = getattr(page_metadata, 'get_' + self.timestamp_src)()
+        # convert dates
+        # convert processingStep
         for step_idx, step_page in enumerate([x for x in page_metadata.get_MetadataItem() if x.get_type() == 'processingStep']):
             if version.parse(self.alto_version) >= version.parse('4.0'):
                 step_alto = ET.SubElement(self.alto_description, 'Processing')
@@ -269,6 +276,10 @@ class OcrdPageAltoConverter():
                 for label in step_page.get_Labels()[0].get_Label():
                     json[label.get_type()] = label.value
                 step_alto_settings.text = dumps(json)
+            if self.timestamp_src:
+                print(page_timestamp)
+                step_alto_processing_date_time = ET.SubElement(step_alto, 'processingDateTime')
+                step_alto_processing_date_time.text = page_timestamp.isoformat()
             step_alto_software = ET.SubElement(step_alto, 'processingSoftware')
             step_alto_software_name = ET.SubElement(step_alto_software, 'softwareName')
             step_alto_software_name.text = step_page.value

@@ -21,11 +21,12 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
               "'first' will use the first TextEquiv, 'last' will use the last TextEquiv on the element")
 @click.option('--region-order', default='document', help="Order in which to iterate over the regions", type=click.Choice(['document', 'reading-order', 'reading-order-only']))
 @click.option('--textline-order', default='document', help="Order in which to iterate over the textlines", type=click.Choice(['document', 'index', 'textline-order']))
+@click.option('--timestamp-src', default='LastChange', help="Which element to use for the timestamp", type=click.Choice(['Created', 'LastChange', 'none']))
 @click.option('-O', '--output-file', default='-', help='Output filename (or "-" for standard output, the default)',
               type=click.Path(dir_okay=False, writable=True, exists=False, allow_dash=True))
 @click.argument('filename',  type=click.Path(dir_okay=False, exists=True))
 def main(log_level, alto_version, check_words, check_border, skip_empty_lines, trailing_dash_to_hyp, dummy_textline, dummy_word, 
-         textequiv_index, textequiv_fallback_strategy, region_order, textline_order, output_file, filename):
+         textequiv_index, textequiv_fallback_strategy, region_order, textline_order, timestamp_src, output_file, filename):
     """
     Convert PAGE to ALTO
     """
@@ -34,6 +35,7 @@ def main(log_level, alto_version, check_words, check_border, skip_empty_lines, t
         alto_version=alto_version,
         page_filename=filename,
         check_words=check_words,
+        timestamp_src=timestamp_src,
         check_border=check_border,
         skip_empty_lines=skip_empty_lines,
         trailing_dash_to_hyp=trailing_dash_to_hyp,

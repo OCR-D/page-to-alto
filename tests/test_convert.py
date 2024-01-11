@@ -1,5 +1,6 @@
 from pytest import raises, main, fixture
 from lxml import etree as ET
+from datetime import datetime
 
 from ocrd_page_to_alto.convert import OcrdPageAltoConverter, NAMESPACES as _NAMESPACES
 from ocrd_utils import initLogging
@@ -110,6 +111,29 @@ def test_reading_order():
     assert len(tree.xpath('//alto:PrintSpace/alto:TextBlock', namespaces=NAMESPACES)) == 2
     assert tree.xpath('//alto:TextBlock[1]', namespaces=NAMESPACES)[0].get('ID') == 'region_0003'
 
+def test_convert_timestamp():
+    ts = datetime.fromisoformat
+
+    last_changed = ts('2018-04-25T17:44:49.605+01:00')
+    tree = ET.fromstring(str(OcrdPageAltoConverter(
+        page_filename='tests/data/timestamp.page.xml',
+        timestamp_src='LastChange',
+    ).convert()).encode('utf-8'))
+    assert ts(tree.xpath('//alto:processingDateTime/text()', namespaces=NAMESPACES)[0]) == last_changed
+
+    created = ts('2016-09-20T11:09:27.041+02:00')
+    tree = ET.fromstring(str(OcrdPageAltoConverter(
+        page_filename='tests/data/timestamp.page.xml',
+        timestamp_src='Created',
+    ).convert()).encode('utf-8'))
+    assert ts(tree.xpath('//alto:processingDateTime/text()', namespaces=NAMESPACES)[0]) == created
+
+    tree = ET.fromstring(str(OcrdPageAltoConverter(
+        page_filename='tests/data/timestamp.page.xml',
+        timestamp_src='none',
+    ).convert()).encode('utf-8'))
+    with raises(IndexError):
+        assert tree.xpath('//alto:processingDateTime/text()', namespaces=NAMESPACES)[0]
 
 
 if __name__ == "__main__":

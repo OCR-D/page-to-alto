@@ -277,7 +277,6 @@ class OcrdPageAltoConverter():
                     json[label.get_type()] = label.value
                 step_alto_settings.text = dumps(json)
             if self.timestamp_src:
-                print(page_timestamp)
                 step_alto_processing_date_time = ET.SubElement(step_alto, 'processingDateTime')
                 step_alto_processing_date_time.text = page_timestamp.isoformat()
             step_alto_software = ET.SubElement(step_alto, 'processingSoftware')

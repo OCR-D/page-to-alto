@@ -1,9 +1,9 @@
 version: 2.1
 
 executors:
-  ubuntu1804:
+  ubuntu2204:
     docker:
-      - image: ubuntu:18.04
+      - image: ubuntu:22.04
 
 commands:
   install-test:
@@ -23,7 +23,7 @@ commands:
 jobs:
 
   build-python:
-    executor: ubuntu1804
+    executor: ubuntu2204
     parameters:
       python-version:
         type: string
@@ -38,7 +38,8 @@ workflows:
           matrix:
             parameters:
               python-version:
-                - '3.6'
                 - '3.7'
                 - '3.8'
                 - '3.9'
+                - '3.10'
+                - '3.11'

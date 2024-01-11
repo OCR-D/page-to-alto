@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Added:
+
+  * support for `alto:processingDateTime` mapped from `pc:Created` or `pc:LastChange`, #36, #37
+
 ## [1.2.0] - 2022-09-13
 
 Changed:

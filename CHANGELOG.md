@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [1.3.0] - 2024-01-11
+
 Added:
 
   * support for `alto:processingDateTime` mapped from `pc:Created` or `pc:LastChange`, #36, #37
@@ -44,6 +46,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[1.3.0]: ../../compare/v1.3.0...v1.2.0
 [1.2.0]: ../../compare/v1.2.0...v1.1.0
 [1.1.0]: ../../compare/v1.1.0...v1.0.1
 [1.0.1]: ../../compare/v1.0.1...v1.0.0

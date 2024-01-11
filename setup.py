@@ -4,7 +4,7 @@ install_requires = open('requirements.txt').read().split('\n')
 
 setup(
     name='ocrd-page-to-alto',
-    version='1.2.0',
+    version='1.3.0',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     author='Konstantin Baierer, Robert Sachunsky',

@@ -15,6 +15,9 @@ setup(
     license='Apache License 2.0',
     packages=find_packages(exclude=['tests', 'repo']),
     install_requires=install_requires,
+    package_data={
+        '': ['*.json']
+    },
     entry_points={
         'console_scripts': [
             'page-to-alto=ocrd_page_to_alto.cli:main',

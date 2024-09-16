@@ -15,6 +15,7 @@ setup(
     entry_points={
         'console_scripts': [
             'page-to-alto=ocrd_page_to_alto.cli:main',
+            'ocrd-page2alto-transform=ocrd_page_to_alto.ocrd_cli:main',
         ]
     },
 )

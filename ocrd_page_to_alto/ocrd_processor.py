@@ -1,4 +1,6 @@
 from typing import Optional
+from os.path import join
+
 from ocrd import Processor
 from ocrd_models.ocrd_file import OcrdFileType
 from ocrd_utils import (

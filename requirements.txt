@@ -1,4 +1,4 @@
-ocrd >= 2.23.2
+ocrd >= 3.0.0b5
 lxml
 langcodes >= 3.4.0
 packaging

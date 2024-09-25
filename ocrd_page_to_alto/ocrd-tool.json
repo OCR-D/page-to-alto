@@ -6,9 +6,9 @@
       "executable": "ocrd-page2alto-transform",
       "categories": ["Layout analysis"],
       "description": "Transform PAGE-XML to ALTO",
-      "input_file_grp": ["OBSOLETE"],
-      "output_file_grp": ["ALSO-OBSOLETE"],
-      "steps": ["whatevs"],
+      "input_file_grp_cardinality": 1,
+      "output_file_grp_cardinality": 1,
+      "steps": ["format conversion"],
       "parameters": {
         "check_border": {
           "type": "boolean",

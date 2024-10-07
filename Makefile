@@ -1,6 +1,11 @@
 PYTHON = python3
 PIP = pip3
 
+# Base image for the docker image
+DOCKER_BASE_IMAGE = ocrd/core:latest
+# Tag to publish docker image
+DOCKER_TAG = ocrd/page2alto
+
 # BEGIN-EVAL makefile-parser --make-help Makefile
 
 help:
@@ -50,3 +55,11 @@ assets: submodules
 # Run tests
 test:
 	$(PYTHON) -mpytest tests
+
+# Build docker image
+docker:
+	docker build \
+	--build-arg DOCKER_BASE_IMAGE=$(DOCKER_BASE_IMAGE) \
+	--build-arg VCS_REF=$$(git rev-parse --short HEAD) \
+	--build-arg BUILD_DATE=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+	-t $(DOCKER_TAG) .

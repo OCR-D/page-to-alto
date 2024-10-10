@@ -5,6 +5,15 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Added:
+
+  - OCR-D processor `ocrd-page2alto-transform` as a faster way for PAGE-ALTO conversion than ocrd_fileformat, #42
+  - Dockerfile and `make docker` command, #41
+
+Changed:
+
+  - Converted codebase to src-layout and replace `setup.py` with `pyproject.toml`, #42
+
 ## [1.3.0] - 2024-01-11
 
 Added:

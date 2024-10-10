@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [1.4.0] - 2024-10-10
+
 Added:
 
   - OCR-D processor `ocrd-page2alto-transform` as a faster way for PAGE-ALTO conversion than ocrd_fileformat, #42
@@ -55,6 +57,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[1.4.0]: ../../compare/v1.4.0...v1.3.0
 [1.3.0]: ../../compare/v1.3.0...v1.2.0
 [1.2.0]: ../../compare/v1.2.0...v1.1.0
 [1.1.0]: ../../compare/v1.1.0...v1.0.1

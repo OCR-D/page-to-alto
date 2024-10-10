@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [1.4.1] - 2024-10-10
+
 Fixed:
 
   - Dockerfile un-broken after switch to src-layout
@@ -61,6 +63,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[1.4.1]: ../../compare/v1.4.1...v1.4.0
 [1.4.0]: ../../compare/v1.4.0...v1.3.0
 [1.3.0]: ../../compare/v1.3.0...v1.2.0
 [1.2.0]: ../../compare/v1.2.0...v1.1.0

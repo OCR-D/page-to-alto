@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Fixed:
+
+  - Dockerfile un-broken after switch to src-layout
+
 ## [1.4.0] - 2024-10-10
 
 Added:

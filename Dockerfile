@@ -15,7 +15,7 @@ ENV XDG_DATA_HOME=/usr/local/share
 
 WORKDIR /build-p2a
 COPY ocrd_page_to_alto/ ./ocrd_page_to_alto
-COPY setup.py .
+COPY pyproject.toml .
 COPY requirements.txt .
 COPY README.md .
 COPY Makefile .

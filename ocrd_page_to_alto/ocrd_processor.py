@@ -1,4 +1,5 @@
 from json import loads
+from ocrd_models.ocrd_page import PageType, PcGtsType
 from pkg_resources import resource_string
 from os.path import join
 
@@ -36,6 +37,7 @@ class Page2AltoProcessor(Processor):
             page_id = input_file.pageId or input_file.ID
             self.log.info("INPUT FILE %s (%d/%d) ", page_id, n + 1, len(self.input_files))
             pcgts = page_from_file(self.workspace.download_file(input_file))
+            assert isinstance(pcgts, PcGtsType)
             self.log.debug('width %s height %s', pcgts.get_Page().imageWidth, pcgts.get_Page().imageHeight)
             self.add_metadata(pcgts)
             page = pcgts.get_Page()
@@ -57,6 +59,7 @@ class Page2AltoProcessor(Processor):
             converter.convert()
             file_id = make_file_id(input_file, self.output_file_grp)
             pcgts.set_pcGtsId(file_id)
+            self.add_metadata(pcgts)
             self.workspace.add_file(
                 ID=file_id,
                 file_grp=self.output_file_grp,

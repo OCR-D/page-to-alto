@@ -1,3 +1,4 @@
+from functools import cached_property
 from typing import Optional
 from os.path import join
 
@@ -12,7 +13,8 @@ from .convert import OcrdPageAltoConverter
 
 
 class Page2AltoProcessor(Processor):
-    @property
+
+    @cached_property
     def executable(self):
         return 'ocrd-page2alto-transform'
 
@@ -20,6 +22,7 @@ class Page2AltoProcessor(Processor):
         input_file = input_files[0]
         assert input_file
         assert input_file.local_filename
+        assert isinstance(self.parameter, dict)
         assert input_file.mimetype == MIMETYPE_PAGE
         self.logger.debug("converting file %s", input_file.local_filename)
         converter = OcrdPageAltoConverter(

@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "setuptools-ocrd>=0.0.19"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ocrd-page-to-alto"
+authors = [
+  {name = "Konstantin Baierer", email = "unixprog@gmail.com"}
+]
+license = {text = "Apache License 2.0"}
+description = "Convert PAGE (v. 2019) to ALTO (v. 2.0 - 4.2)"
+requires-python = ">=3.7"
+dynamic = ['version', 'dependencies']
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[tool.setuptools.dynamic.dependencies]
+file = ["requirements.txt"]
+
+[project.urls]
+Homepage = "https://github.com/OCR-D/page-to-alto"
+Repository = "https://github.com/OCR-D/page-to-alto"
+
+[project.scripts]
+page-to-alto = "ocrd_page_to_alto.cli:main"
+ocrd-page2alto-transform = "ocrd_page_to_alto.ocrd_cli:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"*" = ["*.json"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

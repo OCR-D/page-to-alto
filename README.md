@@ -2,7 +2,7 @@
 
 > Convert PAGE (v. 2019) to ALTO (v. 2.0 - 4.2)
 
-[![image](https://circleci.com/gh/kba/page-to-alto.svg?style=svg)](https://circleci.com/gh/kba/page-to-alto)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/OCR-D/page-to-alto/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/OCR-D/page-to-alto/tree/master)
 
 
 ## Introduction

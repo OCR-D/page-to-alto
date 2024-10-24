@@ -5,6 +5,23 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [1.4.1] - 2024-10-10
+
+Fixed:
+
+  - Dockerfile un-broken after switch to src-layout
+
+## [1.4.0] - 2024-10-10
+
+Added:
+
+  - OCR-D processor `ocrd-page2alto-transform` as a faster way for PAGE-ALTO conversion than ocrd_fileformat, #42
+  - Dockerfile and `make docker` command, #41
+
+Changed:
+
+  - Converted codebase to src-layout and replace `setup.py` with `pyproject.toml`, #42
+
 ## [1.3.0] - 2024-01-11
 
 Added:
@@ -46,6 +63,8 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[1.4.1]: ../../compare/v1.4.1...v1.4.0
+[1.4.0]: ../../compare/v1.4.0...v1.3.0
 [1.3.0]: ../../compare/v1.3.0...v1.2.0
 [1.2.0]: ../../compare/v1.2.0...v1.1.0
 [1.1.0]: ../../compare/v1.1.0...v1.0.1

@@ -63,7 +63,7 @@ class OcrdPageAltoConverter():
         *,
         alto_version='4.2',
         check_words=True,
-        check_border=True,
+        check_border=False,
         skip_empty_lines=False,
         trailing_dash_to_hyp=False,
         textequiv_index=0,

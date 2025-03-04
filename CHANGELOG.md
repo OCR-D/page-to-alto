@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [1.5.0] - 2025-03-04
+
 Fixed:
 
   * text from table regions only converted once, #45
@@ -74,6 +76,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[1.5.0]: ../../compare/v1.5.0...v1.4.1
 [1.4.1]: ../../compare/v1.4.1...v1.4.0
 [1.4.0]: ../../compare/v1.4.0...v1.3.0
 [1.3.0]: ../../compare/v1.3.0...v1.2.0

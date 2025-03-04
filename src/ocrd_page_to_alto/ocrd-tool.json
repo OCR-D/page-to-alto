@@ -8,7 +8,7 @@
       "description": "Transform PAGE-XML to ALTO",
       "input_file_grp": ["OBSOLETE"],
       "output_file_grp": ["ALSO-OBSOLETE"],
-      "steps": ["whatevs"],
+      "steps": ["postprocessing/format-conversion"],
       "parameters": {
         "check_border": {
           "type": "boolean",

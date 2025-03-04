@@ -3,3 +3,4 @@ tests/assets
 __pycache__
 build
 dist
+tests/data/PPN860789411-00000001.alto.xml*

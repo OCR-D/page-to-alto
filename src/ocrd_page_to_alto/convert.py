@@ -303,7 +303,7 @@ class OcrdPageAltoConverter():
             is_empty_line = not(line_page.get_TextEquiv() and line_page.get_TextEquiv()[0].get_Unicode()) and not(line_page.get_Word())
             if is_empty_line and self.skip_empty_lines:
                 self.logger.debug("Skipping empty line '%s'", line_page.id)
-                return
+                continue
             line_alto = ET.SubElement(reg_alto, 'TextLine')
             set_alto_id_from_page_id(line_alto, line_page)
             set_alto_xywh_from_coords(line_alto, line_page)
@@ -362,7 +362,7 @@ class OcrdPageAltoConverter():
                 self._convert_textlines(textblock_alto, parent_page)
 
     def convert_text(self):
-        for reg_page in self.page_page.get_AllRegions(depth=0, order=self.region_order):
+        for reg_page in self.page_page.get_AllRegions(depth=1, order=self.region_order):
             reg_page_type = reg_page.__class__.__name__[0:-10] # len('RegionType') == 10
             reg_alto_type = REGION_PAGE_TO_ALTO[reg_page_type]
             if not reg_alto_type:

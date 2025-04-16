@@ -23,12 +23,8 @@ ENV XDG_DATA_HOME=/usr/local/share
 ENV XDG_CONFIG_HOME /usr/local/share/ocrd-resources
 
 WORKDIR /build/p2a
-COPY src/ ./src
-COPY pyproject.toml .
+COPY . .
 COPY ocrd-tool.json .
-COPY requirements.txt .
-COPY README.md .
-COPY Makefile .
 # prepackage ocrd-tool.json as ocrd-all-tool.json
 RUN ocrd ocrd-tool ocrd-tool.json dump-tools > $(dirname $(ocrd bashlib filename))/ocrd-all-tool.json
 # install everything and reduce image size

@@ -1,8 +1,9 @@
 PYTHON = python3
 PIP = pip3
+DOCKER = docker
 
 # Base image for the docker image
-DOCKER_BASE_IMAGE = ocrd/core:latest
+DOCKER_BASE_IMAGE = docker.io/ocrd/core:v3.3.1
 # Tag to publish docker image
 DOCKER_TAG = ocrd/page2alto
 
@@ -58,7 +59,7 @@ test:
 
 # Build docker image
 docker:
-	docker build \
+	$(DOCKER) build \
 	--build-arg DOCKER_BASE_IMAGE=$(DOCKER_BASE_IMAGE) \
 	--build-arg VCS_REF=$$(git rev-parse --short HEAD) \
 	--build-arg BUILD_DATE=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \

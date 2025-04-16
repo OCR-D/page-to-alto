@@ -1,13 +1,14 @@
 {
   "version": "1.5.0",
   "git_url": "https://github.com/kba/page-to-alto",
+  "dockerhub": "ocrd/page2alto",
   "tools": {
     "ocrd-page2alto-transform": {
       "executable": "ocrd-page2alto-transform",
       "categories": ["Layout analysis"],
       "description": "Transform PAGE-XML to ALTO",
-      "input_file_grp": ["OBSOLETE"],
-      "output_file_grp": ["ALSO-OBSOLETE"],
+      "input_file_grp_cardinality": 1,
+      "output_file_grp_cardinality": 1,
       "steps": ["postprocessing/format-conversion"],
       "parameters": {
         "check_border": {

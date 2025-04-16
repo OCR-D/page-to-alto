@@ -7,12 +7,6 @@ from ocrd_utils import initLogging
 
 NAMESPACES = {**_NAMESPACES, 'alto': _NAMESPACES['alto'] % '4'}
 
-from tests.assets import Assets
-
-# @fixture
-# def assets():
-#     return Assets('')
-
 initLogging()
 
 def test_empty_init_kwargs():
@@ -134,6 +128,25 @@ def test_convert_timestamp():
     ).convert()).encode('utf-8'))
     with raises(IndexError):
         assert tree.xpath('//alto:processingDateTime/text()', namespaces=NAMESPACES)[0]
+
+def test_skip_empty_line():
+    ts = datetime.fromisoformat
+    c = OcrdPageAltoConverter(page_filename='tests/data/empty-lines.page.xml', skip_empty_lines=True).convert()
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    # Ensure that lines after an empty line are transcribed
+    # ID="r1-l1-w1" HEIGHT="1" WIDTH="1" HPOS="0" VPOS="0" CONTENT="bar"
+    assert len(tree.xpath('//alto:String[@ID="r1-l1-w1"][@CONTENT="bar"]', namespaces=NAMESPACES)) == 1
+
+
+def test_no_duplicate_table_regions():
+    c = OcrdPageAltoConverter(page_filename='tests/data/PPN860789411-00000001.page.xml').convert()
+    # with open('tests/data/PPN860789411-00000001.alto.xml', 'w') as f:
+    #     f.write(str(c))
+    tree = ET.fromstring(str(c).encode('utf-8'))
+    # Ensure that this String is converted only once
+    # WIDTH="63" HPOS="860" VPOS="1049" CONTENT="auch"
+    assert len(tree.xpath('//alto:String[@WIDTH="63"][@HPOS="860"][@VPOS="1049"][@CONTENT="auch"]', namespaces=NAMESPACES)) == 1
+
 
 
 if __name__ == "__main__":

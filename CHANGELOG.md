@@ -5,6 +5,19 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [1.5.0] - 2025-03-04
+
+Fixed:
+
+  * text from table regions only converted once, #45
+  * empty lines no longer lead to text loss when `--skip-empty-lines` option is set, #45
+  * langcodes dependency for Python <= 3.8 version-pinned, #45
+
+Changed:
+
+  * `--no-check-border` is now the default, enable check explicitly with `--check-border`, #45
+  * set proper `steps` in `ocrd-tool.json` (`postprocessing/format-conversion`), OCR-D/spec#261
+
 ## [1.4.1] - 2024-10-10
 
 Fixed:
@@ -63,6 +76,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[1.5.0]: ../../compare/v1.5.0...v1.4.1
 [1.4.1]: ../../compare/v1.4.1...v1.4.0
 [1.4.0]: ../../compare/v1.4.0...v1.3.0
 [1.3.0]: ../../compare/v1.3.0...v1.2.0

@@ -10,7 +10,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.option('--alto-version', default='4.2', help='Choose version of ALTO-XML schema to produce (older versions may not preserve all features)',
               type=click.Choice(['4.2', '4.1', '4.0', '3.1', '3.0', '2.1', '2.0']))
 @click.option('--check-words/--no-check-words', default=True, help='Check whether PAGE-XML contains any Words and fail if not')
-@click.option('--check-border/--no-check-border', default=True, help='Check whether PAGE-XML contains Border or PrintSpace')
+@click.option('--check-border/--no-check-border', default=False, help='Check whether PAGE-XML contains Border or PrintSpace')
 @click.option('--skip-empty-lines/--no-skip-empty-lines', default=False, help='Whether to omit or keep empty lines in PAGE-XML')
 @click.option('--trailing-dash-to-hyp/--no-trailing-dash-to-hyp', default=False, help='Whether to add a <HYP/> element if the last word in a line ends in "-"')
 @click.option('--dummy-textline/--no-dummy-textline', default=True, help='Whether to create a TextLine for regions that have TextEquiv/Unicode but no TextLine')

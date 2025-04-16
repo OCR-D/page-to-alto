@@ -8,7 +8,7 @@
       "description": "Transform PAGE-XML to ALTO",
       "input_file_grp_cardinality": 1,
       "output_file_grp_cardinality": 1,
-      "steps": ["format conversion"],
+      "steps": ["postprocessing/format-conversion"],
       "parameters": {
         "check_border": {
           "type": "boolean",

@@ -2,7 +2,7 @@ PYTHON = python3
 PIP = pip3
 
 # Base image for the docker image
-DOCKER_BASE_IMAGE = ocrd/core:latest
+DOCKER_BASE_IMAGE = ocrd/core:v3.3.1
 # Tag to publish docker image
 DOCKER_TAG = ocrd/page2alto
 

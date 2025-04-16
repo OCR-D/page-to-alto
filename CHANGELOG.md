@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Changed:
+
+  * :fire: convert OCR-D processor to v3 API, #40
+
 ## [1.5.0] - 2025-03-04
 
 Fixed:

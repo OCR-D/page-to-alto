@@ -22,7 +22,7 @@ class Page2AltoProcessor(Processor):
         input_file = input_files[0]
         assert input_file
         assert input_file.local_filename
-        assert isinstance(self.parameter, dict)
+        assert self.parameter
         assert input_file.mimetype == MIMETYPE_PAGE
         self.logger.debug("converting file %s", input_file.local_filename)
         converter = OcrdPageAltoConverter(

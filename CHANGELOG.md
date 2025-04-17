@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Fixed:
+
+  * Assertion on `self.parameter` being a `dict` was too strict (it's a `frozendict`), #47
+
 ## [2.0.0] - 2025-04-16
 
 Changed:

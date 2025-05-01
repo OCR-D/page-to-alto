@@ -3,9 +3,9 @@ PIP = pip3
 DOCKER = docker
 
 # Base image for the docker image
-DOCKER_BASE_IMAGE = docker.io/ocrd/core:v3.3.1
+DOCKER_BASE_IMAGE ?= docker.io/ocrd/core:latest
 # Tag to publish docker image
-DOCKER_TAG = ocrd/page2alto
+DOCKER_TAG ?= ocrd/page2alto
 
 # BEGIN-EVAL makefile-parser --make-help Makefile
 

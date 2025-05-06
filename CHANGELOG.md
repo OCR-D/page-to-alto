@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [2.1.0] - 2025-05-06
+
 Changed:
 
   * `make docker`: Overrideable `$(DOCKER)` command and base on `latest` OCR-D/core, #48
@@ -92,6 +94,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[2.0.1]: ../../compare/v2.1.0...v2.0.1
 [2.0.1]: ../../compare/v2.0.1...v2.0.0
 [2.0.0]: ../../compare/v2.0.0...v1.5.0
 [1.5.0]: ../../compare/v1.5.0...v1.4.1
@@ -101,4 +104,4 @@ Initial release
 [1.2.0]: ../../compare/v1.2.0...v1.1.0
 [1.1.0]: ../../compare/v1.1.0...v1.0.1
 [1.0.1]: ../../compare/v1.0.1...v1.0.0
-[1.0.0]: ../../compare/HEAD...v1.0.0
+[1.0.0]: ../../compare/HEAD...v1.0.`0

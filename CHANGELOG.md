@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Changed:
+
+  * `make docker`: Overrideable `$(DOCKER)` command and base on `latest` OCR-D/core, #48
+
 ## [2.0.1] - 2025-04-17
 
 Fixed:

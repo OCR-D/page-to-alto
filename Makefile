@@ -3,7 +3,7 @@ PIP = pip3
 DOCKER = docker
 
 # Base image for the docker image
-DOCKER_BASE_IMAGE ?= docker.io/ocrd/core:latest
+DOCKER_BASE_IMAGE ?= docker.io/ocrd/core:3.12.3
 # Tag to publish docker image
 DOCKER_TAG ?= ocrd/page2alto
 
@@ -57,13 +57,20 @@ assets: submodules
 test:
 	$(PYTHON) -mpytest tests
 
+# Concatenate docker image names with either the git tag describing current commit or 'latest' and
+# merge list with "-t"
+empty :=
+space := $(empty) $(empty)
+GIT_TAG := $(strip $(shell git describe --tags | grep -x "v[0-9]\+\.[0-9]\+\.[0-9]\+"))
+DOCKER_TAGS = $(subst $(space),$(space)-t$(space),$(DOCKER_TAG:%=$(if $(GIT_TAG),%:$(GIT_TAG),%:latest)))
+
 # Build docker image
 docker:
 	$(DOCKER) build \
 	--build-arg DOCKER_BASE_IMAGE=$(DOCKER_BASE_IMAGE) \
 	--build-arg VCS_REF=$$(git rev-parse --short HEAD) \
 	--build-arg BUILD_DATE=$$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-	-t $(DOCKER_TAG) .
+	-t $(DOCKER_TAGS) .
 
 build:
 	$(PYTHON) -m build

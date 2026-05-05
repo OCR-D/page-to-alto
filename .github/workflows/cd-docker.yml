@@ -36,7 +36,7 @@ jobs:
         username: ${{ secrets.DOCKERIO_USERNAME }}
         password: ${{ secrets.DOCKERIO_PASSWORD }}
     - name: define unversioned fully qualified docker image names
-      run: echo "DOCKER_TAG='docker.io/ocrd/page2alto ghcr.io/ocr-d/page2alto'" >> $GITHUB_ENV
+      run: echo "DOCKER_TAG=docker.io/ocrd/page2alto ghcr.io/ocr-d/page2alto" >> $GITHUB_ENV
     - name: Build the Docker image
       run: make DOCKER_TAG="${{ env.DOCKER_TAG }}" docker
     - name: Smoke Test the Docker image

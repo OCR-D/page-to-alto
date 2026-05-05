@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [2.2.1] - 2026-05-05
+
 Fixed:
 
   * Dockerfile had a typo (missing `v` in front of `3.12.3`)
@@ -106,6 +108,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[2.2.1]: ../../compare/v2.2.1...v2.2.0
 [2.2.0]: ../../compare/v2.2.0...v2.1.0
 [2.1.0]: ../../compare/v2.1.0...v2.0.1
 [2.0.1]: ../../compare/v2.0.1...v2.0.0

@@ -35,7 +35,7 @@ jobs:
         password: ${{ secrets.DOCKERIO_PASSWORD }}
     - name: Build the Docker image
       # build both tags at the same time
-      run: make docker DOCKER_TAG="docker.io/ocrd/page2alto -t ghcr.io/ocr-d/page2alto"
+      run: make docker DOCKER_TAG="docker.io/ocrd/page2alto ghcr.io/ocr-d/page2alto"
     - name: Test the Docker image
       run: docker run --rm ocrd/page2alto ocrd-page2alto-transform -h
     - name: Push to Dockerhub

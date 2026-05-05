@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Fixed:
+
+  * Docker CD: Run smoke test on versioned image too
+
 ## [2.2.2] - 2026-05-05
 
 Fixed:

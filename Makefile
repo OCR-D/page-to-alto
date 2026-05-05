@@ -77,7 +77,7 @@ docker:
 # Push docker images
 docker-push:
 	for img in $(DOCKER_TAGS);do \
-		$(DOCKER) push $$img &; \
+		sleep 2 & \
 	done; wait
 
 docker-smoke-test:

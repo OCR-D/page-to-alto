@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Changed:
+
+  * Cleaned up Docker and PyPI CD
+
 ## [2.2.7] - 2026-05-05
 
 Changed:

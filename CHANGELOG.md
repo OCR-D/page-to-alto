@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [2.2.9] - 2026-05-05
+
 Fixed:
 
   * PyPI CD: use python 3.9 for now
@@ -155,6 +157,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[2.2.9]: ../../compare/v2.2.9...v2.2.8
 [2.2.8]: ../../compare/v2.2.8...v2.2.7
 [2.2.7]: ../../compare/v2.2.7...v2.2.6
 [2.2.6]: ../../compare/v2.2.6...v2.2.5

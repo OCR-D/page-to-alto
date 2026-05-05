@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Fixed:
+
+  * PyPI CD: use python 3.9 for now
+
 ## [2.2.8] - 2026-05-05
 
 Changed:

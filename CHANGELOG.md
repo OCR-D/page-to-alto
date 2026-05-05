@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [2.2.3] - 2026-05-05
+
 Fixed:
 
   * Docker CD: Run smoke test on versioned image too
@@ -119,6 +121,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[2.2.3]: ../../compare/v2.2.3...v2.2.2
 [2.2.2]: ../../compare/v2.2.2...v2.2.1
 [2.2.1]: ../../compare/v2.2.1...v2.2.0
 [2.2.0]: ../../compare/v2.2.0...v2.1.0

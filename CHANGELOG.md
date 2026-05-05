@@ -5,7 +5,13 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Fixed:
+
+  * Docker CD: Typo (extra semicolon)
+
 ## [2.2.4] - 2026-05-05
+
+Fixed:
 
   * Docker CD: Typo {,docker}-smoke-test
 

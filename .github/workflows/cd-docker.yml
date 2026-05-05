@@ -33,10 +33,11 @@ jobs:
       with:
         username: ${{ secrets.DOCKERIO_USERNAME }}
         password: ${{ secrets.DOCKERIO_PASSWORD }}
+    - name: define unversioned fully qualified docker image names
+      run: echo "DOCKER_TAG='docker.io/ocrd/page2alto ghcr.io/ocr-d/page2alto'" >> $GITHUB_ENV
     - name: Build the Docker image
-      # build both tags at the same time
-      run: make docker DOCKER_TAG="docker.io/ocrd/page2alto ghcr.io/ocr-d/page2alto"
+      run: make DOCKER_TAG="${{ env.DOCKER_TAG }}" docker
     - name: Smoke Test the Docker image
-      run: make docker-smoke-test DOCKER_TAG="ghcr.io/ocr-d/page2alto"
+      run: make DOCKER_TAG="${{ env.DOCKER_TAG }}" docker-smoke-test
     - name: Push to Dockerhub and Github Container Registry
-      run: make docker-push DOCKER_TAG="docker.io/ocrd/page2alto ghcr.io/ocr-d/page2alto"
+      run: make DOCKER_TAG="${{ env.DOCKER_TAG }}" docker-push

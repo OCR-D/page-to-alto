@@ -37,6 +37,6 @@ jobs:
       # build both tags at the same time
       run: make docker DOCKER_TAG="docker.io/ocrd/page2alto ghcr.io/ocr-d/page2alto"
     - name: Smoke Test the Docker image
-      run: make smoke-test DOCKER_TAG="ghcr.io/ocr-d/page2alto"
+      run: make docker-smoke-test DOCKER_TAG="ghcr.io/ocr-d/page2alto"
     - name: Push to Dockerhub and Github Container Registry
       run: make docker-push DOCKER_TAG="docker.io/ocrd/page2alto ghcr.io/ocr-d/page2alto"

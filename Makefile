@@ -79,7 +79,7 @@ docker-push:
 	for img in $(DOCKER_TAGS);do $(DOCKER) push $$img & done; wait
 
 docker-smoke-test:
-	$(DOCKER) run --rm $(firstword DOCKER_TAGS) ocrd-page2alto-transform -h
+	$(DOCKER) run --rm $(firstword $(DOCKER_TAGS)) ocrd-page2alto-transform -h
 
 build:
 	$(PYTHON) -m build

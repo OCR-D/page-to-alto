@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [2.2.4] - 2026-05-05
+
   * Docker CD: Typo {,docker}-smoke-test
 
 ## [2.2.3] - 2026-05-05
@@ -123,6 +125,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[2.2.4]: ../../compare/v2.2.4...v2.2.3
 [2.2.3]: ../../compare/v2.2.3...v2.2.2
 [2.2.2]: ../../compare/v2.2.2...v2.2.1
 [2.2.1]: ../../compare/v2.2.1...v2.2.0

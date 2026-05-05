@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Fixed:
+
+  * Docker CD: Typo (debug sleep stmt instead of docker push)
+
 ## [2.2.5] - 2026-05-05
 
 Fixed:

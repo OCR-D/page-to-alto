@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Changed:
+
+  * Propagate coordinates down from `TextLine` to `String` for empty lines, #49
+
 ## [2.1.0] - 2025-05-06
 
 Changed:

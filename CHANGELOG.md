@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Fixed:
+
+  * Docker CD: Push the git-tag-versioned images instead of `latest`
+
 ## [2.2.1] - 2026-05-05
 
 Fixed:

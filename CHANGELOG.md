@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [2.2.0] - 2026-05-05
+
 Changed:
 
   * Propagate coordinates down from `TextLine` to `String` for empty lines, #49
@@ -100,7 +102,8 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
-[2.0.1]: ../../compare/v2.1.0...v2.0.1
+[2.2.0]: ../../compare/v2.2.0...v2.1.0
+[2.1.0]: ../../compare/v2.1.0...v2.0.1
 [2.0.1]: ../../compare/v2.0.1...v2.0.0
 [2.0.0]: ../../compare/v2.0.0...v1.5.0
 [1.5.0]: ../../compare/v1.5.0...v1.4.1

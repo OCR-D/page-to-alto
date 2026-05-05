@@ -129,12 +129,22 @@ def test_convert_timestamp():
         with raises(IndexError):
             assert xpath('//alto:processingDateTime/text()')[0]
 
-def test_skip_empty_line():
+def test_skip_empty_line_continued():
+    """
+    Ensure that lines after an empty line are transcribed
+    """
     with roundtrip(OcrdPageAltoConverter(page_filename='tests/data/empty-lines.page.xml', skip_empty_lines=True)) as xpath:
-        # Ensure that lines after an empty line are transcribed
         # ID="r1-l1-w1" HEIGHT="1" WIDTH="1" HPOS="0" VPOS="0" CONTENT="bar"
         assert len(xpath('//alto:String[@ID="r1-l1-w1"][@CONTENT="bar"]')) == 1
 
+def test_empty_line_word_coords():
+    """
+    https://github.com/OCR-D/page-to-alto/pull/49
+    """
+    with roundtrip(OcrdPageAltoConverter(page_filename='tests/data/empty-lines.page.xml', skip_empty_lines=False)) as xpath:
+        for attr in ['WIDTH', 'HEIGHT', 'VPOS', 'HPOS']:
+            assert xpath('//alto:TextLine[@ID="r1-l2-empty"]/alto:String')[0].get(attr) is not None
+            assert xpath('//alto:TextLine[@ID="r1-l2-empty"]')[0].get(attr) == xpath('//alto:TextLine[@ID="r1-l2-empty"]/alto:String')[0].get(attr)
 
 def test_no_duplicate_table_regions():
     c = OcrdPageAltoConverter(page_filename='tests/data/PPN860789411-00000001.page.xml')

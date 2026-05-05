@@ -1,5 +1,5 @@
 {
-  "version": "2.2.5",
+  "version": "2.2.6",
   "git_url": "https://github.com/kba/page-to-alto",
   "dockerhub": "ocrd/page2alto",
   "tools": {

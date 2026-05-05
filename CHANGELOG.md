@@ -5,6 +5,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## [2.2.6] - 2026-05-05
+
 Fixed:
 
   * Docker CD: Typo (debug sleep stmt instead of docker push)
@@ -137,6 +139,7 @@ Fixed:
 Initial release
 
 <!-- link-labels -->
+[2.2.6]: ../../compare/v2.2.6...v2.2.5
 [2.2.5]: ../../compare/v2.2.5...v2.2.4
 [2.2.4]: ../../compare/v2.2.4...v2.2.3
 [2.2.3]: ../../compare/v2.2.3...v2.2.2

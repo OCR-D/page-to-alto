@@ -315,6 +315,7 @@ class OcrdPageAltoConverter():
             if is_empty_line:
                 word_alto_empty = ET.SubElement(line_alto, 'String')
                 word_alto_empty.set('ID', '%s-word0' % line_page.id)
+                set_alto_xywh_from_coords(word_alto_empty, line_page)
                 word_alto_empty.set('CONTENT', '')
             if self.dummy_word:
                 self.set_dummy_word_for_textline(line_page)

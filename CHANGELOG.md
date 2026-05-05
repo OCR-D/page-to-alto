@@ -8,6 +8,7 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 Fixed:
 
   * Docker CD: Run smoke test on versioned image too
+  * Docker CD: cannot use docker push in parallel directly
 
 ## [2.2.2] - 2026-05-05
 

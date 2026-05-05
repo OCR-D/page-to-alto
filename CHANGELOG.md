@@ -8,6 +8,8 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 Changed:
 
   * Propagate coordinates down from `TextLine` to `String` for empty lines, #49
+  * Docker image now based on OCR-D/core 3.12.3
+  * Docker releases now tagged by version if possible
 
 ## [2.1.0] - 2025-05-06
 

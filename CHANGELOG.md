@@ -5,6 +5,10 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Fixed:
+
+  * Dockerfile had a typo (missing `v` in front of `3.12.3`)
+
 ## [2.2.0] - 2026-05-05
 
 Changed:

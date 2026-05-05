@@ -1,3 +1,4 @@
+SHELL = bash
 PYTHON = python3
 PIP = pip3
 DOCKER = docker
@@ -75,7 +76,9 @@ docker:
 
 # Push docker images
 docker-push:
-	$(DOCKER) push $(DOCKER_TAGS)
+	for img in $(DOCKER_TAGS);do \
+		$(DOCKER) push $$img &; \
+	done; wait
 
 docker-smoke-test:
 	$(DOCKER) run --rm $(DOCKER_TAGS) ocrd-page2alto-transform -h

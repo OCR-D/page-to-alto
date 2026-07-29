@@ -5,6 +5,12 @@ Versioned according to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Changed:
+
+  * Update docker base image to OCR-D/core v3.13.2
+
+## [2.2.12] - 2026-07-29
+
 ## [2.2.11] - 2026-06-05
 
 Fixed:
@@ -15,7 +21,7 @@ Fixed:
 
 Changed:
 
-  * Update docker base image to OCR-D/core v3.13.0, #52
+  * Update docker base image to OCR-D/core v3.13.1, #52
 
 ## [2.2.9] - 2026-05-05
 
